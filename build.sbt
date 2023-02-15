@@ -4,5 +4,6 @@ ThisBuild / scalaVersion := "3.2.2"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Interior Designer"
+    name := "Interior Designer",
+    libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
   )
