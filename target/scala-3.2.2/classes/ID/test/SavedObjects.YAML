@@ -1,0 +1,13 @@
+- label: Hotplate
+  shape: rectangle
+  length: 33
+  width: 33
+  height: 5
+  color: D3D3D3
+  addObjects:
+    - shape: oval
+      length: 27
+      width: 27
+      height: 1
+      color: 000000
+      posOffset: 3, 3, 10
