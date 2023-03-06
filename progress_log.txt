@@ -1,0 +1,6 @@
+6.3.2022
+I've created most of the classes from the UML diagram in the technical plan but their methods are still undefined.
+Also (re)learned some Scala Swing, but I'm thinking I might switch to ScalaFX.
+Nothing that can error yet.
+Spent around 3-4 hours.
+Probably behind schedule but should be easy enough to catch up.
