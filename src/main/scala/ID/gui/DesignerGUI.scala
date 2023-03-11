@@ -1,15 +1,16 @@
 package ID.gui
 
-import ID.gui.DesignerGUI.{background, contents, preferredSize, title}
+import scalafx.application.JFXApp3
+import scalafx.geometry.Insets
+import scalafx.scene.Scene
+import scalafx.scene.control.Label
+import scalafx.scene.layout.BorderPane
 
-import scala.swing.*
-
-object DesignerGUI extends MainFrame:
- title = "Interior Designer"
-
- this.resizable = true
-
- preferredSize = new Dimension(1920, 1080)
-
- contents = new BoxPanel(Orientation.Horizontal){
-  background = java.awt.Color.DARK_GRAY}
+object DesignerGUI extends scalafx.application.JFXApp3.PrimaryStage:
+ title = "Hello"
+ scene = new Scene {
+  root = new BorderPane {
+   padding = Insets(75)
+   center = new Label("Hello World")
+  }
+ }
