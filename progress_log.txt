@@ -1,6 +1,13 @@
-6.3.2022
+6.3.2023
 I've created most of the classes from the UML diagram in the technical plan but their methods are still undefined.
-Also (re)learned some Scala Swing, but I'm thinking I might switch to ScalaFX.
+Also, (re)learned some Scala Swing, but I'm thinking I might switch to ScalaFX.
 Nothing that can error yet.
 Spent around 3-4 hours.
 Probably behind schedule but should be easy enough to catch up. Been busy with other courses.
+
+20.3.2023
+I've switched the GUI from Swing to ScalaFX and started implementing most methods in pretty much every class.
+Deviated from the plan since the program is rather reliant on having most classes functioning rather than completing and then testing one at a time.
+Fairly happy with the current progress.
+Spent around 8-9 hours.
+Done with lab assignments in physics, so I'll have more time for this project now.
