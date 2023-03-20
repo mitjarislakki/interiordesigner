@@ -1,7 +1,7 @@
 package ID.projects
 import java.awt.Color
 
-trait Shape(width: Double, length: Double, height: Double, color: Color, posOffset: (Double, Double, Double) = (0, 0, 0)):
+trait Shape(width: Double, length: Double, height: Double, color: Color, val posOffset: (Int, Int, Int) = (0, 0, 0)):
   def area: Double
   def setColor(color: Color): Unit
   def setPos(pos: Pos): Unit
