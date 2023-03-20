@@ -1,7 +1,7 @@
 package ID.projects
 import scala.collection.mutable.Buffer
 
-class Project(val objects: Buffer[IDObject]):
+class Project(val name: String, val objects: Buffer[IDObject]):
 
   def objectsAtLayer(n: Int) = objects.filter(_.layer==n)
   def addObject(ob: IDObject): Unit = objects += ob
