@@ -3,14 +3,13 @@ package ID.gui
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control.Label
+import scalafx.scene.control.{Label, Menu, MenuBar, MenuItem, SeparatorMenuItem}
 import scalafx.scene.layout.BorderPane
 
 object DesignerGUI extends scalafx.application.JFXApp3.PrimaryStage:
  title = "Hello"
- scene = new Scene {
-  root = new BorderPane {
-   padding = Insets(75)
-   center = new Label("Hello World")
+ scene = new Scene(400, 200) {
+  val menuBar = DesignerMenu.menuBar
+  menuBar.prefWidth = this.getWidth
+  content = List(menuBar)
   }
- }
