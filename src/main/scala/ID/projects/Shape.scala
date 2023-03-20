@@ -1,14 +1,23 @@
 package ID.projects
-import java.awt.Color
+import scalafx.scene.paint.Color
 
-trait Shape(width: Double, length: Double, height: Double, color: Color, val posOffset: (Int, Int, Int) = (0, 0, 0)):
+trait Shape(private var _width: Double, private var _length: Double, private var _height: Double, private var _color: Color, val posOffset: (Int, Int, Int) = (0, 0, 0)):
+  def color = _color
+  def width = _width
+  def length = _length
+  def height = _height
+
   def area: Double
-  def setColor(color: Color): Unit
+  def setColor(color: Color): Unit = _color = color
   def setPos(pos: Pos): Unit
   def rotate(amount: Double): Unit
-  def scaleX(amount: Double): Unit
-  def scaleY(amount: Double): Unit
-  def scale(amount: Double): Unit
+  def scaleX(amount: Double): Unit =
+    _width = width * amount
+  def scaleY(amount: Double): Unit =
+    _length = length * amount
+  def scale(amount: Double): Unit =
+    scaleX(amount)
+    scaleY(amount)
 /*
 class Cuboid(width: Int, length: Int, height: Int, color: Color, posOffset: (Double, Double, Double)) extends Shape(length, width, height, color, posOffset):
   def area = width * length
