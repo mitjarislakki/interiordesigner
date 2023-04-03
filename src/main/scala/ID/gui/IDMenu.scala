@@ -22,4 +22,3 @@ object IDMenu:
    fileMenu.items = List(newProject, openProject, saveProject, new SeparatorMenuItem, exitItem)
    menuBar.menus = List(fileMenu, editMenu, viewMenu, helpMenu)
 
-

@@ -22,3 +22,8 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
  root.add(IDToolbar, 0, 1)
  root.add(IDOProperties, 2, 1)
 
+ IDMenu.openProject.onAction = (event) =>
+   val t = new scalafx.stage.FileChooser()
+   t.setTitle("Testing")
+   t.showOpenDialog(this)
+
