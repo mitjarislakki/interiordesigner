@@ -12,5 +12,6 @@ object IDToolbar extends ToolBar:
     val addRectangle = new Button {text = "Rectangle tool"}
     val addCircle = new Button {text = "Circle tool"}
     val addTriangle = new Button{text = "Triangle tool"}
+    val temp = new Button{text = "TEMP DRAW PROJECT"}
 
-    content ++= List(select, addRectangle, addCircle, addTriangle)
+    content ++= List(select, addRectangle, addCircle, addTriangle, temp)

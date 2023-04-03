@@ -11,7 +11,10 @@ import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConst
 import scalafx.scene.text.Font
 
 import ID.projects.Project
+import ID.projects.{Rectangle, Oval, Triangle}
 import ID.files.IDReader
+
+import scala.util.Random
 
 object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
  var project: Option[Project] = None
@@ -36,3 +39,20 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
      if (file.getName.endsWith(".YAML")) then
        project = Some(IDReader(file).readFile())
      else println("NOT NICE")
+
+ IDToolbar.temp.onAction = (event) =>
+   println("Starting draw")
+   val d = IDCanvas.g
+   project.foreach(project =>
+     project.objects.foreach(IDO =>
+       IDO.shapes.foreach(shape =>
+         d.fill = shape.color;
+         shape match
+           case a: Rectangle => d.fillRect(a.pos.x, a.pos.y, a.width, a.length)
+           case b: Oval => d.fillOval(b.pos.x, b.pos.y, b.width, b.length)
+           case c: Triangle => d.fillPolygon(Array[Double](c.pos.x, c.pos.x,c.pos.x+c.width),Array[Double](c.pos.y, c.pos.y,c.pos.y+c.length), 3 )
+           case _ => println("Unknown shape")
+       )
+     )
+   )
+
