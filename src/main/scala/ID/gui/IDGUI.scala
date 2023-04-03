@@ -10,7 +10,12 @@ import scalafx.scene.control.{Button, Label, Menu, MenuBar, MenuItem, SeparatorM
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, RowConstraints}
 import scalafx.scene.text.Font
 
+import ID.projects.Project
+import ID.files.IDReader
+
 object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
+ var project: Option[Project] = None
+
  val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
  title = "Interior Designer"
  val root = GridPane()
@@ -22,8 +27,12 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
  root.add(IDToolbar, 0, 1)
  root.add(IDOProperties, 2, 1)
 
+  // Event handler for the "open project" menu button. Opens a file chooser.
  IDMenu.openProject.onAction = (event) =>
    val t = new scalafx.stage.FileChooser()
    t.setTitle("Testing")
-   t.showOpenDialog(this)
-
+   val file = t.showOpenDialog(this)
+   if file != null then
+     if (file.getName.endsWith(".YAML")) then
+       project = Some(IDReader(file).readFile())
+     else println("NOT NICE")

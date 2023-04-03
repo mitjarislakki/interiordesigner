@@ -4,11 +4,11 @@ import java.io.*
 import scala.collection.mutable.Buffer
 import ID.projects._
 
-class MyReader(path: String):
+class IDReader(file: File):
   def readFile(): Project =
     val fileIn =
       try
-        FileReader(path)
+        FileReader(file)
       catch
         case e:FileNotFoundException=> throw Error("File not found")
 
