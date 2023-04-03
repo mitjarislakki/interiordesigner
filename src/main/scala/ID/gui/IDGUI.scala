@@ -16,20 +16,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
  val root = GridPane()
  this.scene = new Scene(parent = root)
 
- val projectCanvas = Canvas(primaryMonitor.getWidth-400, primaryMonitor.getHeight-400)
- val g = projectCanvas.graphicsContext2D
- g.fill = White
- g.fillRect(0, 0, projectCanvas.getWidth, projectCanvas.getHeight)
 
- val tools = IDToolbar
-
- val properties = new ToolBar {
-  orientation=scalafx.geometry.Orientation.Vertical
-  background = Background(Array(new BackgroundFill((DarkSlateGray), CornerRadii.Empty, Insets.Empty)))}
- properties.content ++= List(new Label{text ="Lorem ipsum"; textFill = White;font = Font.font(36)})
-
-
- root.add(projectCanvas, 1, 1)
+ root.add(IDCanvas, 1, 1)
  root.add(IDMenu.menuBar, 0, 0, 3, 1)
- root.add(tools, 0, 1)
- root.add(properties, 2, 1)
+ root.add(IDToolbar, 0, 1)
+ root.add(IDOProperties, 2, 1)
+
