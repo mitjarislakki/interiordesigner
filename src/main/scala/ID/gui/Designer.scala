@@ -8,5 +8,5 @@ import scalafx.scene.layout.BorderPane
 
 object Designer extends scalafx.application.JFXApp3:
  override def start(): Unit =
-  stage = ID.gui.DesignerGUI
+  stage = ID.gui.IDGUI
 end Designer

@@ -3,7 +3,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.{Label, Menu, MenuBar, MenuItem, SeparatorMenuItem}
 
 
-object DesignerMenu:
+object IDMenu:
    val menuBar = new MenuBar
 
    val fileMenu = new Menu("File")
