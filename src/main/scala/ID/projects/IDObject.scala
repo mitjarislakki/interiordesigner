@@ -1,7 +1,7 @@
 package ID.projects
 import scala.collection.mutable.Buffer
 
-class IDObject(private var _layer: Int, private var _name: String, private val shapes: Buffer[Shape], private var currentPos: Pos):
+class IDObject(private var _layer: Int, private var _name: String, val shapes: Buffer[Shape], private var currentPos: Pos):
   val mainShape = shapes.headOption
 
   def layer = _layer

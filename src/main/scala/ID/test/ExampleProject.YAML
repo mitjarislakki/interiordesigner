@@ -1,6 +1,6 @@
 name: Epic Apartment
 floorplan: #path to image??
-IDObjects:
+idobjects:
   - label: Desk
     layer: 1
     shape: rectangle
@@ -9,7 +9,7 @@ IDObjects:
     height: 72
     rotation: 0
     color: 964B00
-    pos: 100, 10
+    pos: 100, 10, 0
   - label: Chair
     layer: 1
     shape: rectangle
@@ -18,4 +18,4 @@ IDObjects:
     height: 40
     rotation: 0
     color: D3D3D3
-    pos: 185, 75
+    pos: 185, 75, 0

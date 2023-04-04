@@ -4,13 +4,13 @@ import java.io.*
 import scala.collection.mutable.Buffer
 import ID.projects._
 
-object Reader:
-  def readFile(): Unit =
+class IDReader(file: File):
+  def readFile(): Project =
     val fileIn =
       try
-        FileReader("ExampleProject.YAML")
+        FileReader(file)
       catch
-        case e:FileNotFoundException=> println("file not found"); return
+        case e:FileNotFoundException=> throw Error("File not found")
 
     val lineReader = BufferedReader(fileIn)
 
@@ -23,41 +23,49 @@ object Reader:
     try
       var inputLine = lineReader.readLine()
       while inputLine != null do
-        inputLine = lineReader.readLine()
+        if inputLine.startsWith("name:") && projectName.isEmpty then projectName = Some(inputLine.drop(5).trim) // add project name
 
-        if inputLine.startsWith("Name:") && projectName.isEmpty then projectName = Some(inputLine.drop(5)) // add project name
-
-        if inputLine == "IDObjects:" then currentSection = Some(inputLine) // set selection to IDObjects
+        if inputLine == "idobjects:" then currentSection = Some(inputLine) // set selection to IDObjects
 
         currentSection match
-          case Some("IDObjects:") =>
-            if inputLine.startsWith("-") then
+          case Some("idobjects:") =>
+            if inputLine.trim.startsWith("-") then
               objectbuffer += new Array[String](9)
               objectStepper = 0
-            objectbuffer.lastOption.foreach(n => n(objectStepper) = inputLine.substring(inputLine.indexOf(':')).trim)
+            objectbuffer.lastOption.foreach(n => n(objectStepper) = inputLine.split(':')(1).trim)
             objectStepper += 1
           case _ =>
+        inputLine = lineReader.readLine()
       end while
     catch
       case e: IOException => throw Error("Some weird IO error lol")
     finally
       lineReader.close()
     if projectName.isEmpty then throw Error("Project name undefined")
-    else if objectbuffer.exists(_.contains(null)) then throw Error("Some object has missing parameters")
-    else
-      Project(projectName.get,
-        objectbuffer.map(a =>
-          val name = a(0)
-          val layer = a(1).toInt
-          val length = a(3)
-          val width = a(4)
-          val height = a(5)
-          val rotation = a(6)
-          val color = a(7)
-          val pos =
-            val asArray = a(8).split(',').map(_.trim.toInt)
-            Pos(asArray(0), asArray(1), asArray(2))
-          val shape = a(2)
-          IDObject(layer, name, Buffer[Shape](), pos)
-        )
+    if objectbuffer.exists(_.contains(null)) then throw Error("Some object has missing parameters")
+    Project(projectName.get,
+      objectbuffer.map(a =>
+        val name = a(0)
+        val layer = a(1).toInt
+        val length = a(3)
+        val width = a(4)
+        val height = a(5)
+        val rotation = a(6)
+        val color = a(7)
+        val pos =
+          val asArray = a(8).split(',').map(_.trim.toInt)
+          Pos(asArray(0), asArray(1), asArray(2))
+        val shape = a(2)
+        IDObject(layer, name, Buffer[Shape](), pos)
       )
+    )
+  end readFile
+
+  def myLs() =
+    val currentDirectory = new File("./")
+    val listing = currentDirectory.listFiles()
+
+    for oneFile <- listing do
+      if oneFile.isFile then
+        println(oneFile.length + " bytes\t " + oneFile.getName)
+  end myLs

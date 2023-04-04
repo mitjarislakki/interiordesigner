@@ -15,7 +15,7 @@ trait Shape(private var _width: Double, private var _length: Double, private var
   def setPos(pos: Pos): Unit =
     _pos = pos
 
-  def rotate(amount: Double): Unit
+  def rotate(amount: Double): Unit = println("lol")
 
   def scaleX(amount: Double): Unit =
     _width = width * amount
@@ -26,23 +26,12 @@ trait Shape(private var _width: Double, private var _length: Double, private var
   def scale(amount: Double): Unit =
     scaleX(amount)
     scaleY(amount)
-/*
-class Cuboid(width: Int, length: Int, height: Int, color: Color, posOffset: (Double, Double, Double)) extends Shape(length, width, height, color, posOffset):
+
+class Rectangle(width: Int, length: Int, height: Int, color: Color, pos: Pos, posOffset: (Int, Int, Int)) extends Shape(length, width, height, color, pos, posOffset):
   def area = width * length
-  def setColor(color: Color) = ???
-  def setPos(amount: Double) = ???
-  def rotate(amount: Double) = ???
-  def scaleX(amount: Double) = ???
-  def scaleY(amount: Double) = ???
-  def scale(amount: Double) = ???
 
-
-class Cylinder(width: Int, length: Int, height: Int, color: Color, posOffset: (Double, Double, Double)) extends Shape(length, width, height, color, posOffset):
+class Oval(width: Int, length: Int, height: Int, color: Color, pos: Pos, posOffset: (Int, Int, Int)) extends Shape(length, width, height, color, pos, posOffset):
   def area = Math.PI * width * length
-  def setColor(color: Color) = ???
-  def setPos(amount: Double) = ???
-  def rotate(amount: Double) = ???
-  def scaleX(amount: Double) = ???
-  def scaleY(amount: Double) = ???
-  def scale(amount: Double) = ???
-*/
+
+class Triangle(width: Int, length: Int, height: Int, color: Color, pos: Pos, posOffset: (Int, Int, Int)) extends Shape(length, width, height, color, pos, posOffset):
+  def area = width * length / 2.0
