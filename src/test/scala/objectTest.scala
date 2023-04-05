@@ -1,23 +1,33 @@
 import scalafx.application.JFXApp3
 import scalafx.geometry.{Insets, Point2D}
-import scalafx.scene.Scene
-import scalafx.scene.effect.DropShadow
+import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.{BorderPane, HBox}
+import scalafx.scene.layout.{BorderPane, GridPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color.*
 import scalafx.scene.paint.*
 import scalafx.scene.shape.{Circle, Cylinder, Ellipse, Rectangle}
 import scalafx.Includes.*
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.geometry.Point2D
-import scalafx.scene.Scene
-import scalafx.scene.input.MouseEvent
-import scalafx.scene.paint.Color
-import scalafx.stage.{StageStyle, WindowEvent}
 
 object graphicTest extends JFXApp3:
-  val v = new Rectangle:
+  var selection = false
+  var draggable: Boolean = true
+  var scalable: Boolean = false
+
+  val selectionPane = new Pane()
+  val selectionBox = new Rectangle:
+    x = 0
+    y = 0
+    width = 0
+    height = 0
+    stroke = Blue
+    strokeWidth = 1
+    fill = LightBlue
+
+  val v = new Pane
+
+  val t = new Rectangle:
       x = 100
       y = 100
       width = 50
@@ -29,31 +39,62 @@ object graphicTest extends JFXApp3:
     width = 20
     height = 40
     fill = Green
+  v.children.addAll(t, s)
 
   override def start() =
     stage = new scalafx.application.JFXApp3.PrimaryStage:
       width = 500
       height = 500
-      val root = new BorderPane()
+      val root = new GridPane()
       scene = new Scene(parent = root)
-      root.children.addAll(v, s)
-      var shapeLocation: Option[Point2D] = None
-      root.children.foreach( node =>
-        val initPos = new Point2D(node.getTranslateX, node.getTranslateY)
-        var anchorPoint: Option[Point2D] = None
-        ;
-        node.onMousePressed = (event: MouseEvent) =>
-          anchorPoint = Some(new Point2D(event.screenX, event.screenY))
-        ;
-        node.onMouseDragged = (event: MouseEvent) =>
-          anchorPoint.foreach(point =>
-            val sL = shapeLocation.getOrElse(initPos);
-            node.translateX = (sL.x + event.screenX - point.x);
-            node.translateY = (sL.y + event.screenY - point.y))
-        ;
-        node.onMouseReleased = (event: MouseEvent) =>
-          shapeLocation = Some(new Point2D(node.getTranslateX, node.getTranslateY))
-          println(shapeLocation.toString)
-      )
+      val editor = new BorderPane()
+      editor.children.addAll(t, s)
+      editor.children.foreach(node => makeDraggable(node))
+
+      root.add(editor, 0, 0)
+      // TODO Drag selection
+/*
+      val selectionContext = new DragContext
+      editor.onMouseClicked = (event: MouseEvent) =>
+        if selection then
+          selectionContext.initX = event.getScreenX
+          selectionContext.initY = event.getScreenY
+      editor.onMouseDragged = (event: MouseEvent) =>
+        if selection then
+          selectionBox.translateX = selectionContext.initX
+          selectionBox.translateY = selectionContext.initY
+          selectionBox.setWidth((event.screenX - selectionContext.initX)/2)
+          selectionBox.setHeight((event.screenY - selectionContext.initX)/2)
+
+          println("width: " + selectionBox.getWidth + "\n height: " + selectionBox.getHeight)
+      editor.onMouseReleased = (event: MouseEvent) =>
+        selectionBox.setTranslateX(0.0)
+        selectionBox.setTranslateY(0.0)
+        selectionBox.setWidth(0.0)
+        selectionBox.setHeight(0.0)
+*/
+  end start
+
+  def makeDraggable(node: Node): Unit =
+    if draggable then
+      val dG = new DragContext
+      node.onMousePressed = (event: MouseEvent) =>
+        dG.anchorX = event.screenX
+        dG.anchorY = event.screenY
+        dG.initX = node.getTranslateX
+        dG.initY = node.getTranslateY
+
+      node.onMouseDragged = (event: MouseEvent) =>
+        node.translateX = dG.initX + event.screenX - dG.anchorX;
+        node.translateY = dG.initY + event.screenY - dG.anchorY
+  def makeScalable(node: Node): Unit =
+    if scalable then ???
+  def makeSelection = ???
 
 
+
+private final class DragContext:
+  var initX: Double = 0
+  var initY: Double = 0
+  var anchorX: Double = 0
+  var anchorY: Double = 0
