@@ -14,7 +14,8 @@ import scalafx.event
 import scalafx.scene.control.{Button, Label, TextField, ToolBar}
 
 object graphicTest extends JFXApp3:
-  private var selectedNode: Option[Node] = None
+  private var _selectedNode: Option[Node] = None
+  def selectedNode = _selectedNode
   var selection = false
   var draggable: Boolean = true
   var scalable: Boolean = false
@@ -56,14 +57,13 @@ object graphicTest extends JFXApp3:
       editor.children.foreach(node => makeDraggable(node))
 
 
-      root.add(editor, 0, 0)
 
 
 
+      val exp1 = new Label(s"Currently selected: ${selectedNode.getOrElse("Nothing")}")
       val tb = new ToolBar:
         orientation = scalafx.geometry.Orientation.Vertical
         background = Background(Array(new BackgroundFill((DarkSlateGray), CornerRadii.Empty, Insets.Empty)))
-        val exp1 = new Label(s"Currently selected: ${selectedNode.getOrElse("Nothing")}")
         val field1 = new TextField
         val selBtn = new Button("Select on/off")
         val dragBtn = new Button("Drag on/off")
@@ -77,11 +77,46 @@ object graphicTest extends JFXApp3:
         content ++= List(exp1, field1, selBtn, dragBtn)
         field1.onKeyTyped = (event: KeyEvent) => println("lol")
 
-      root.add(tb, 1, 0)
+      val properties = new GridPane()
+      properties.setPadding(scalafx.geometry.Insets(10, 10, 10, 10))
+      properties.setVgap(5)
+      properties.setHgap(5)
+      val xLabel = Label(s"X: ")
+      val yLabel = Label("Y: ")
+      val xBox = TextField()
+      xBox.setPromptText("0")
+      val yBox = TextField()
+      yBox.setPromptText("0")
+      properties.add(xLabel, 0, 0)
+      properties.add(xBox, 1,  0)
+      properties.add(yLabel, 0, 1)
+      properties.add(yBox, 1, 1)
+      xBox.onKeyTyped = (event: KeyEvent) =>
+        selectedNode.foreach( node =>
+          val c = xBox.getText.toDoubleOption match
+            case Some(p) if (p>0) => p
+            case _ => node.getTranslateX
+          ;
+          node.translateX = c);
+
+      yBox.onKeyTyped = (event: KeyEvent) =>
+        selectedNode.foreach( node =>
+          val c = yBox.getText.toDoubleOption match
+            case Some(p) if (p>0) => p
+            case _ => node.getTranslateY
+          ;
+          node.translateY = c);
+
+      root.add(tb, 0, 0)
+      root.add(editor, 1, 0)
+      root.add(properties, 2, 0)
 
 
 
       // TODO Drag selection
+      editor.children.foreach(node => node.onMouseClicked = (event: MouseEvent) =>
+        _selectedNode = Some(node);
+        exp1.text = node.toString)
 /*
       val selectionContext = new DragContext
       editor.onMouseClicked = (event: MouseEvent) =>
