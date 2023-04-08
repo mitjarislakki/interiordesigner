@@ -42,8 +42,8 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
    root.add(IDMenu.menuBar, 0, 0, 3, 1)
    root.add(IDToolbar, 0, 1)
    root.add(IDOProperties, 2, 1)
-/*
     // Event handler for the "open project" menu button. Opens a file chooser.
+   var project: Option[Project] = None
    IDMenu.openProject.onAction = (event) =>
      val t = new scalafx.stage.FileChooser()
      t.setTitle("Testing")
@@ -52,7 +52,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
        if (file.getName.endsWith(".YAML")) then
          project = Some(IDReader(file).readFile())
        else println("NOT NICE")
-
+/*
  IDToolbar.temp.onAction = (event) =>
    println("Starting draw")
    val d = IDCanvas.g

@@ -2,7 +2,7 @@ import ID.gui.IDToolbar.{background, orientation}
 import scalafx.application.JFXApp3
 import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.{Node, Scene}
-import scalafx.scene.input.{MouseEvent, KeyEvent}
+import scalafx.scene.input.{KeyEvent, MouseEvent}
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, CornerRadii, GridPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color.*
 import scalafx.scene.paint.*
@@ -10,6 +10,7 @@ import scalafx.scene.shape.{Circle, Cylinder, Ellipse, Rectangle}
 import scalafx.Includes.*
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.event
 import scalafx.scene.control.{Button, Label, TextField, ToolBar}
 
 object graphicTest extends JFXApp3:
@@ -69,9 +70,10 @@ object graphicTest extends JFXApp3:
         selBtn.setOnAction( event =>
           selection = !selection;
           println("set selection to " + selection))
-        dragBtn.setOnAction( event =>
-          draggable = !draggable;
-          println("set selection to " + draggable))
+
+        dragBtn.setOnAction(event =>
+          draggable = !draggable
+          println("set draggable to " + draggable))
         content ++= List(exp1, field1, selBtn, dragBtn)
         field1.onKeyTyped = (event: KeyEvent) => println("lol")
 
@@ -103,18 +105,19 @@ object graphicTest extends JFXApp3:
   end start
 
   def makeDraggable(node: Node): Unit =
-    if draggable then
       val dG = new DragContext
       node.onMousePressed = (event: MouseEvent) =>
-        dG.anchorX = event.screenX
-        dG.anchorY = event.screenY
-        dG.initX = node.getTranslateX
-        dG.initY = node.getTranslateY
+        if draggable then
+          dG.anchorX = event.screenX
+          dG.anchorY = event.screenY
+          dG.initX = node.getTranslateX
+          dG.initY = node.getTranslateY
         event.consume()
 
       node.onMouseDragged = (event: MouseEvent) =>
-        node.translateX = dG.initX + event.screenX - dG.anchorX;
-        node.translateY = dG.initY + event.screenY - dG.anchorY
+        if draggable then
+          node.translateX = dG.initX + event.screenX - dG.anchorX
+          node.translateY = dG.initY + event.screenY - dG.anchorY
         event.consume()
   def makeScalable(node: Node): Unit =
     if scalable then ???
