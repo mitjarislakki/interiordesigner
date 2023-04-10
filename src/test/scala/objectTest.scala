@@ -71,6 +71,14 @@ object graphicTest extends JFXApp3:
         val field1 = new TextField
         val selBtn = new Button("Select on/off")
         val dragBtn = new Button("Drag on/off")
+        val zoomBtn = new Button("Reset zoom")
+        val addRect = new Button("Add rectangle")
+
+        def resetScale(node: Node) =
+          node.scaleX = 1
+          node.scaleY = 1
+        zoomBtn.setOnAction((event) => resetScale(editor))
+
         selBtn.setOnAction( event =>
           selection = !selection;
           println("set selection to " + selection))
@@ -78,7 +86,7 @@ object graphicTest extends JFXApp3:
         dragBtn.setOnAction(event =>
           draggable = !draggable
           println("set draggable to " + draggable))
-        content ++= List(exp1, field1, selBtn, dragBtn)
+        content ++= List(exp1, field1, selBtn, dragBtn, zoomBtn)
         field1.onKeyTyped = (event: KeyEvent) => println("lol")
 
       val properties = new GridPane()
@@ -117,7 +125,7 @@ object graphicTest extends JFXApp3:
         xBox.text = s"${newVal.getTranslateX}";
         yBox.text = s"${newVal.getTranslateY}";
         scaleXBox.text = s"${newVal.getScaleX}";
-        scaleYBox.text = s"${newVal.getScaleY}"
+        scaleYBox.text = s"${newVal.getScaleY}";
         )
 
       scaleXBox.onKeyTyped = (event: KeyEvent) =>
