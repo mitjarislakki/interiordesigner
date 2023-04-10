@@ -10,12 +10,14 @@ import scalafx.scene.shape.{Circle, Cylinder, Ellipse, Rectangle}
 import scalafx.Includes.*
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.beans.property.ObjectProperty
 import scalafx.event
 import scalafx.scene.control.{Button, Label, TextField, ToolBar}
 
 object graphicTest extends JFXApp3:
   private var _selectedNode: Option[Node] = None
   def selectedNode = _selectedNode
+  val selNode = new ObjectProperty[Node]
   var selection = false
   var draggable: Boolean = true
   var scalable: Boolean = false
@@ -33,14 +35,14 @@ object graphicTest extends JFXApp3:
   val v = new Pane
 
   val t = new Rectangle:
-      x = 100
-      y = 100
+      x = 0
+      y = 0
       width = 50
       height = 50
       fill = Blue
   val s = new Rectangle:
-    x = 200
-    y = 250
+    x = 0
+    y = 0
     width = 20
     height = 40
     fill = Green
@@ -53,7 +55,9 @@ object graphicTest extends JFXApp3:
       val root = new GridPane()
       scene = new Scene(parent = root)
       val editor = new BorderPane()
-      editor.children.addAll(t, s)
+      editor.prefHeight = 200
+      editor.prefWidth = 200
+      editor.children.addAll(v)
       editor.children.foreach(node => makeDraggable(node))
 
 
@@ -87,17 +91,42 @@ object graphicTest extends JFXApp3:
       xBox.setPromptText("0")
       val yBox = TextField()
       yBox.setPromptText("0")
+      val wLabel = Label("Width: ")
+      val hLabel = Label("Height: ")
+      val wBox = TextField()
+      wBox.setPromptText("0")
+      val hBox = TextField()
+      hBox.setPromptText("0")
+      val scaleBox = TextField()
+      scaleBox.setPromptText("0")
+
       properties.add(xLabel, 0, 0)
       properties.add(xBox, 1,  0)
       properties.add(yLabel, 0, 1)
       properties.add(yBox, 1, 1)
+      properties.add(wLabel, 0, 2)
+      properties.add(wBox, 1, 2)
+      properties.add(hLabel, 0, 3)
+      properties.add(hBox, 1, 3)
+      properties.add(scaleBox, 1, 4)
+
+
+      selNode.onChange( (_, _, newVal) =>
+        xBox.text = s"${newVal.getTranslateX}";
+        yBox.text = s"${newVal.getTranslateY}";
+        hBox.text = "lmaooo"
+        )
+
+      scaleBox.onKeyTyped = (event: KeyEvent) =>
+        selectedNode.foreach(node => node.scaleX = scaleBox.getText.toDoubleOption.getOrElse(node.getScaleX))
+
       xBox.onKeyTyped = (event: KeyEvent) =>
         selectedNode.foreach( node =>
           val c = xBox.getText.toDoubleOption match
             case Some(p) if (p>0) => p
             case _ => node.getTranslateX
           ;
-          node.translateX = c);
+          node.layoutX = c);
 
       yBox.onKeyTyped = (event: KeyEvent) =>
         selectedNode.foreach( node =>
@@ -112,9 +141,10 @@ object graphicTest extends JFXApp3:
       root.add(properties, 2, 0)
 
 
-
       // TODO Drag selection
       editor.children.foreach(node => node.onMouseClicked = (event: MouseEvent) =>
+        println(node.getTranslateX);
+        selNode.value = node;
         _selectedNode = Some(node);
         exp1.text = node.toString)
 /*
