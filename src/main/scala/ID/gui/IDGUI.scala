@@ -30,11 +30,11 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
    val test = new Pane()
 
    val column0 = new ColumnConstraints:
-     percentWidth = 16
+     percentWidth = 15
    val column1 = new ColumnConstraints:
-     percentWidth = 68
+     percentWidth = 50
    val column2 = new ColumnConstraints:
-     percentWidth = 16
+     percentWidth = 35
 
    root.columnConstraints = Array[ColumnConstraints](column0, column1, column2)
 

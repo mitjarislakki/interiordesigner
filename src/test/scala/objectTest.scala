@@ -14,6 +14,25 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.event
 import scalafx.scene.control.{Button, Label, TextField, ToolBar}
 
+import ID.gui.ObjectNode
+import ID.projects.Pos
+
+val t = new Rectangle:
+  x = 0
+  y = 0
+  width = 50
+  height = 50
+  fill = Blue
+val s = new Rectangle:
+  x = 0
+  y = 0
+  width = 20
+  height = 40
+  fill = Green
+
+val testNode = ObjectNode("test", scala.collection.mutable.Buffer((s, new Pos(0, 0, 0))))
+
+
 object graphicTest extends JFXApp3:
   private var _selectedNode: Option[Node] = None
   def selectedNode = _selectedNode
@@ -32,39 +51,20 @@ object graphicTest extends JFXApp3:
     strokeWidth = 1
     fill = LightBlue
 
-  val v = new Pane
 
-  val t = new Rectangle:
-      x = 0
-      y = 0
-      width = 50
-      height = 50
-      fill = Blue
-  val s = new Rectangle:
-    x = 0
-    y = 0
-    width = 20
-    height = 40
-    fill = Green
-  v.children.addAll(t, s)
 
   override def start() =
     stage = new scalafx.application.JFXApp3.PrimaryStage:
-      width = 500
-      height = 500
+      title = "Lets gooo"
       val root = new GridPane()
+      root.gridLinesVisible = true
       scene = new Scene(parent = root)
       val editor = new BorderPane()
       editor.prefHeight = 200
       editor.prefWidth = 200
-      editor.children.addAll(v)
+      editor.children.addAll(testNode)
       editor.children.foreach(node => makeDraggable(node))
 
-
-
-
-
-      val exp1 = new Label(s"Currently selected: ${selectedNode.getOrElse("Nothing")}")
       val tb = new ToolBar:
         orientation = scalafx.geometry.Orientation.Vertical
         background = Background(Array(new BackgroundFill((DarkSlateGray), CornerRadii.Empty, Insets.Empty)))
@@ -77,17 +77,18 @@ object graphicTest extends JFXApp3:
         def resetScale(node: Node) =
           node.scaleX = 1
           node.scaleY = 1
-        zoomBtn.setOnAction((event) => resetScale(editor))
+        zoomBtn.onAction = _ => resetScale(editor)
 
-        selBtn.setOnAction( event =>
+        selBtn.onAction = _ =>
           selection = !selection;
-          println("set selection to " + selection))
+          println("set selection to " + selection)
 
-        dragBtn.setOnAction(event =>
+        dragBtn.onAction = _ =>
           draggable = !draggable
-          println("set draggable to " + draggable))
-        content ++= List(exp1, field1, selBtn, dragBtn, zoomBtn)
-        field1.onKeyTyped = (event: KeyEvent) => println("lol")
+          println("set draggable to " + draggable)
+        content ++= List(field1, selBtn, dragBtn, zoomBtn)
+        maxWidth = 60
+      end tb
 
       val properties = new GridPane()
       properties.setPadding(scalafx.geometry.Insets(10, 10, 10, 10))
@@ -135,9 +136,11 @@ object graphicTest extends JFXApp3:
         selectedNode.foreach( node =>
           val c = xBox.getText.toDoubleOption match
             case Some(p) if (p>=0) => p
-            case _ => node.getTranslateX
+            case _ => node.getLayoutX
           ;
-          node.translateX = c);
+          node.layoutX = c);
+      xBox.focused.onChange((_, _, _) => selectedNode.foreach(node => xBox.text = node.getTranslateX.toString))
+
 
       yBox.onKeyTyped = (event: KeyEvent) =>
         selectedNode.foreach( node =>
@@ -145,7 +148,7 @@ object graphicTest extends JFXApp3:
             case Some(p) if (p>=0) => p
             case _ => node.getTranslateY
           ;
-          node.translateY = c);
+          node.layoutY = c);
 
       root.add(tb, 0, 0)
       root.add(editor, 1, 0)
@@ -155,10 +158,9 @@ object graphicTest extends JFXApp3:
 
       // TODO Drag selection
       editor.children.foreach(node => node.onMouseClicked = (event: MouseEvent) =>
-        println(node.getTranslateX);
+        println(s"Translate: ${node.getTranslateX}\nLayout: ${node.getLayoutX}\nWidth: ${node.getBoundsInParent.getWidth}");
         selNode.value = node;
-        _selectedNode = Some(node);
-        exp1.text = node.toString)
+        _selectedNode = Some(node))
 /*
       val selectionContext = new DragContext
       editor.onMouseClicked = (event: MouseEvent) =>
