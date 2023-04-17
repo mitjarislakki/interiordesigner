@@ -17,7 +17,7 @@ import scalafx.scene.shape.Rectangle
 import scala.util.Random
 
 object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
-   width = 500
+   width = 700
    height = 500
 
 
@@ -25,23 +25,17 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
    val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
    title = "Interior Designer"
    val root = GridPane()
+   root.gridLinesVisible = true
    this.scene = new Scene(parent = root)
 
    val test = new Pane()
 
-   val column0 = new ColumnConstraints:
-     percentWidth = 15
-   val column1 = new ColumnConstraints:
-     percentWidth = 50
-   val column2 = new ColumnConstraints:
-     percentWidth = 35
-
-   root.columnConstraints = Array[ColumnConstraints](column0, column1, column2)
-
    root.add(test, 1, 1)
    root.add(IDMenu.menuBar, 0, 0, 3, 1)
    root.add(IDToolbar, 0, 1)
+   root.add(tempEditor, 1, 1)
    root.add(IDOProperties, 2, 1)
+   tempEditor.autosize()
     // Event handler for the "open project" menu button. Opens a file chooser.
    var project: Option[Project] = None
    IDMenu.openProject.onAction = (event) =>

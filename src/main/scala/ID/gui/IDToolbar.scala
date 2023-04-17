@@ -8,10 +8,10 @@ import scalafx.scene.paint.Color.DarkSlateGray
 object IDToolbar extends ToolBar:
     orientation =scalafx.geometry.Orientation.Vertical
     background = Background(Array(new BackgroundFill((DarkSlateGray), CornerRadii.Empty, Insets.Empty)))
-    val select = new Button {text = "Select"}
-    val addRectangle = new Button {text = "Rectangle tool"}
-    val addCircle = new Button {text = "Circle tool"}
-    val addTriangle = new Button{text = "Triangle tool"}
-    val temp = new Button{text = "TEMP DRAW PROJECT"}
+    val select = new Button {text = "SEL"}
+    val addRectangle = new Button {text = "REC"}
+    val addCircle = new Button {text = "CIRC"}
+    val addTriangle = new Button{text = "TRI"}
+    val temp = new Button{text = "TEMP"}
 
     content ++= List(select, addRectangle, addCircle, addTriangle, temp)
