@@ -17,3 +17,12 @@ The FileReader is working now, I've implemented a file chooser into the GUI and 
 Somewhat working backwards because the GUI is not very fun to work with :D
 Not awful progress but definitely needed more time spent on it. Luckily I'll have a ton of free time in the next 2 weeks.
 3-4 hours.
+
+17.4.2023
+I've added mouse dragging shapes and editing properties (pos, scale) via keyboard input but javafx's node-on-node coordinate system is giving me trouble.
+Shapes have coordinates, but if said shape is inside another pane node then the only coordinates available are getLayoutX/Y & getTranslateX/Y which both return 0, 0 regardless of the shape's initial location.
+the scaleX / scaleY methods also scale out both ways from the center while retaining the original translate/layout coordinates meaning my borders don't work.
+Started work on ObjectNode (stackpane) to hopefully handle transformations via mouse (i.e. circles in the corners of a rectangle that let you transform it)
+My initial technical plan isn't working out particularly well for the Project backend as turning a file into a Project class and then most of its information again into the GUI seems somewhat redundant given the graphical nature of the application.
+I'll probably need to request a time extension for this :(
+~15+ hours including a lot of scalafx/javafx tutorials & stackoverflow.
