@@ -84,3 +84,11 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
           node.scaleY = scaleFactor
         case _ =>
       )
+  // layer
+  IDOProperties.layerBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node =>
+      IDOProperties.layerBox.getText.toIntOption match
+        // TODO replace selectedNode with type [ObjectNode] to use .setLayer -method
+        case Some(n) if n>=0 =>
+        case _ =>
+      )
