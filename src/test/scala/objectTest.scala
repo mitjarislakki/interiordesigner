@@ -8,8 +8,6 @@ import scalafx.scene.paint.Color.*
 import scalafx.scene.paint.*
 import scalafx.scene.shape.{Circle, Cylinder, Ellipse, Rectangle}
 import scalafx.Includes.*
-import scalafx.application.JFXApp
-import scalafx.application.JFXApp.PrimaryStage
 import scalafx.beans.property.ObjectProperty
 import scalafx.event
 import scalafx.scene.control.{Button, Label, TextField, ToolBar}
@@ -80,7 +78,7 @@ object graphicTest extends JFXApp3:
         zoomBtn.onAction = _ => resetScale(editor)
 
         selBtn.onAction = _ =>
-          selection = !selection;
+          selection = !selection
           println("set selection to " + selection)
 
         dragBtn.onAction = _ =>
