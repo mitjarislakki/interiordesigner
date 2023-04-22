@@ -4,41 +4,45 @@ import javafx.geometry.VerticalDirection
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.paint.Color.*
-import scalafx.scene.Scene
-import scalafx.scene.canvas.Canvas
+import scalafx.scene.{Node, Scene}
+import scalafx.scene.input.{KeyEvent, MouseEvent, ScrollEvent}
 import scalafx.scene.control.{Button, Label, Menu, MenuBar, MenuItem, SeparatorMenuItem, ToolBar}
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, Pane, RowConstraints}
 import scalafx.scene.text.Font
 import ID.projects.Project
 import ID.files.IDReader
+import scalafx.Includes.*
+import scalafx.beans.property.ObjectProperty
 import scalafx.scene.input.MouseEvent
+import scalafx.event
 import scalafx.scene.shape.Rectangle
 
 import scala.util.Random
 
 object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
-   width = 700
-   height = 500
+  val editor = tempEditor
+  width = 800
+  height = 500
 
 
+  val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
+  title = "Interior Designer"
+  val root = GridPane()
+  root.gridLinesVisible = true
+  this.scene = new Scene(parent = root)
 
-   val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
-   title = "Interior Designer"
-   val root = GridPane()
-   root.gridLinesVisible = true
-   this.scene = new Scene(parent = root)
+  val test = new Pane()
 
-   val test = new Pane()
+  root.add(test, 1, 1)
+  root.add(IDMenu.menuBar, 0, 0, 3, 1)
+  root.add(IDToolbar, 0, 1)
+  root.add(editor, 1, 1)
+  root.add(IDOProperties, 2, 1)
+  editor.autosize()
 
-   root.add(test, 1, 1)
-   root.add(IDMenu.menuBar, 0, 0, 3, 1)
-   root.add(IDToolbar, 0, 1)
-   root.add(tempEditor, 1, 1)
-   root.add(IDOProperties, 2, 1)
-   tempEditor.autosize()
-    // Event handler for the "open project" menu button. Opens a file chooser.
-   var project: Option[Project] = None
-   IDMenu.openProject.onAction = (event) =>
+  // file chooser for "open project" -button in menu
+  var project: Option[Project] = None
+  IDMenu.openProject.onAction = (event) =>
      val t = new scalafx.stage.FileChooser()
      t.setTitle("Testing")
      val file = t.showOpenDialog(this)
@@ -46,20 +50,37 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
        if (file.getName.endsWith(".YAML")) then
          project = Some(IDReader(file).readFile())
        else println("NOT NICE")
-/*
- IDToolbar.temp.onAction = (event) =>
-   println("Starting draw")
-   val d = IDCanvas.g
-   project.foreach(project =>
-     project.objects.foreach(IDO =>
-       IDO.shapes.foreach(shape =>
-         d.fill = shape.color;
-         shape match
-           case a: Rectangle => d.fillRect(a.pos.x, a.pos.y, a.width, a.length)
-           case b: Oval => d.fillOval(b.pos.x, b.pos.y, b.width, b.length)
-           case c: Triangle => d.fillPolygon(Array[Double](c.pos.x, c.pos.x,c.pos.x+c.width),Array[Double](c.pos.y, c.pos.y,c.pos.y+c.length), 3 )
-           case _ => println("Unknown shape")
-       )
-     )
-   )
-*/
+
+  // changes selected node on click
+  editor.objects.foreach(node => node.onMouseClicked = (event: MouseEvent) => editor.selectedNode.value = node)
+
+  // updates property values on node change
+  editor.selectedNode.onChange((_, _, newNode) =>
+    IDOProperties.update(newNode);
+  )
+
+  // listeners for IDOProperties input
+  // X pos
+  IDOProperties.xBox.onKeyTyped = (event: KeyEvent) =>
+      Option(editor.selectedNode.value).foreach(node => IDOProperties.xBox.getText.toDoubleOption.foreach(node.setTranslateX(_)))
+  // Y pos
+  IDOProperties.yBox.onKeyTyped = (event: KeyEvent) =>
+      Option(editor.selectedNode.value).foreach(node => IDOProperties.yBox.getText.toDoubleOption.foreach(node.setTranslateY(_)))
+  // width
+  IDOProperties.wBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node =>
+      IDOProperties.wBox.getText.toDoubleOption match
+        case Some(n) if n>0 =>
+          val scaleFactor: Double = n / ((node.getBoundsInParent.getWidth)/node.getScaleX);
+          node.scaleX = scaleFactor
+        case _ =>
+      )
+  // height
+  IDOProperties.hBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node =>
+      IDOProperties.hBox.getText.toDoubleOption match
+        case Some(n) if n>0 =>
+          val scaleFactor: Double = n / ((node.getBoundsInParent.getHeight)/node.getScaleY);
+          node.scaleY = scaleFactor
+        case _ =>
+      )
