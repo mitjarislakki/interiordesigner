@@ -18,5 +18,7 @@ val rec = new Rectangle:
   fill = Blue
 val testNode = ObjectNode("test", scala.collection.mutable.Buffer((rec, new Pos(0, 0, 0))))
 object tempEditor extends IDEditor(new Project("lol", Buffer[IDObject]())):
+  this.setPrefWidth(500)
+  this.setPrefHeight(500)
   tempEditor.children = testNode
   EventHelper.makeDraggable(testNode)

@@ -35,7 +35,7 @@ object EventHelper:
 
     node.onMouseDragged = (event: MouseEvent) =>
       if true then
-        node.translateX = scala.math.min(200  , scala.math.max(0, dG.initX + event.screenX - dG.anchorX))
+        node.translateX = scala.math.max(0, dG.initX + event.screenX - dG.anchorX)
         node.translateY = scala.math.max(0, dG.initY + event.screenY - dG.anchorY)
       event.consume()
 
