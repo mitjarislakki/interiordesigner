@@ -15,6 +15,7 @@ import scalafx.Includes.*
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.input.MouseEvent
 import scalafx.event
+import scalafx.event.ActionEvent
 import scalafx.scene.shape.Rectangle
 
 import scala.util.Random
@@ -66,7 +67,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // listeners for IDOProperties input
   // name
   IDOProperties.nameBox.onKeyTyped = (event: KeyEvent) =>
-    Option(editor.selectedNode.value).foreach(node => node.changeName(IDOProperties.nameBox.getText))
+    Option(editor.selectedNode.value).foreach(node => node.setName(IDOProperties.nameBox.getText))
   // X pos
   IDOProperties.xBox.onKeyTyped = (event: KeyEvent) =>
       Option(editor.selectedNode.value).foreach(node => IDOProperties.xBox.getText.toDoubleOption.foreach(node.setTranslateX(_)))
@@ -99,3 +100,6 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
         case Some(n) if n>=0 =>
         case _ =>
       )
+  // color
+  IDOProperties.colorPicker.onAction = (event: ActionEvent) =>
+    Option(editor.selectedNode.value).foreach(node => node.setColor(IDOProperties.colorPicker.getValue))

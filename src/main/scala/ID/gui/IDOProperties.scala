@@ -1,9 +1,10 @@
 package ID.gui
 
-import scalafx.scene.control.{Label, TextField}
+import scalafx.scene.control.{ColorPicker, Label, TextField}
 import scalafx.geometry.Insets
 import scalafx.scene.Node
 import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii, GridPane}
+import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.*
 import scalafx.scene.text.Font
 
@@ -43,6 +44,9 @@ object IDOProperties extends GridPane():
       val layerBox = TextField()
       layerBox.setPromptText("0")
 
+      val colorLabel = Label("Color: ")
+      val colorPicker = new ColorPicker
+
       def update(node: ObjectNode) =
             nameBox.setText(node.name)
             xBox.setText(node.getTranslateX.toString)
@@ -51,6 +55,7 @@ object IDOProperties extends GridPane():
             hBox.setText(node.getBoundsInParent.getHeight.toString)
             scaleXBox.setText(node.getScaleX.toString)
             scaleYBox.setText(node.getScaleY.toString)
+            node.main.foreach(shape => colorPicker.value = shape.getFill.asInstanceOf[javafx.scene.paint.Color])
 
       add(name, 0, 0)
       add(nameBox, 1, 0)
@@ -68,3 +73,5 @@ object IDOProperties extends GridPane():
       add(scaleYBox, 1, 6)
       add(layerLabel, 0, 7)
       add(layerBox, 1, 7)
+      add(colorLabel, 0, 8)
+      add(colorPicker, 1, 8)
