@@ -52,7 +52,11 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
        else println("NOT NICE")
 
   // changes selected node on click
-  editor.objects.foreach(node => node.onMouseClicked = (event: MouseEvent) => editor.selectedNode.value = node)
+  editor.objects.foreach(node =>
+    node match
+      case a: ObjectNode => a.onMouseClicked = (event: MouseEvent) => editor.selectedNode.value = a
+      case _ =>
+  )
 
   // updates property values on node change
   editor.selectedNode.onChange((_, _, newNode) =>
@@ -60,6 +64,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   )
 
   // listeners for IDOProperties input
+  // name
+  IDOProperties.nameBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node => node.changeName(IDOProperties.nameBox.getText))
   // X pos
   IDOProperties.xBox.onKeyTyped = (event: KeyEvent) =>
       Option(editor.selectedNode.value).foreach(node => IDOProperties.xBox.getText.toDoubleOption.foreach(node.setTranslateX(_)))

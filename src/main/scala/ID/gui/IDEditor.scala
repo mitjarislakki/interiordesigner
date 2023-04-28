@@ -12,7 +12,7 @@ import scala.collection.mutable.Buffer
 
 class IDEditor(project: Project) extends Pane:
   def objects = this.children
-  val selectedNode = new ObjectProperty[Node]
+  val selectedNode = new ObjectProperty[ObjectNode]
   def initialize = ???
 
 val rec = new Rectangle:

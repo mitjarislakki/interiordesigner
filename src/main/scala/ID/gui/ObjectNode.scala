@@ -6,12 +6,15 @@ import scalafx.scene.shape.Shape
 
 import scala.collection.mutable.Buffer
 
-class ObjectNode(private var _name: String, val shapes: Buffer[(Shape, Pos)], private var _layer: Int = 0) extends StackPane:
+class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _layer: Int = 0) extends javafx.scene.layout.StackPane:
+  private val nameLabel = Label(_name)
 
   def setLayer(n: Int) =
     if n >= 0 then _layer = n
 
-  def name = _name
+  def name = nameLabel.getText
+
+  def changeName(input: String) = nameLabel.setText(input)
 
   val main = shapes.headOption.map(_._1)
-  main.foreach(shape => children.addAll(shape, Label(name)))
+  main.foreach(shape => getChildren.addAll(shape, nameLabel))

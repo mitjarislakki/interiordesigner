@@ -12,6 +12,9 @@ object IDOProperties extends GridPane():
       vgap = 5
       hgap = 5
 
+      val name = Label("Name: ")
+      val nameBox = TextField()
+
       val xLabel = Label("X: ")
       val xBox = TextField()
       xBox.setPromptText("0")
@@ -40,7 +43,8 @@ object IDOProperties extends GridPane():
       val layerBox = TextField()
       layerBox.setPromptText("0")
 
-      def update(node: Node) =
+      def update(node: ObjectNode) =
+            nameBox.setText(node.name)
             xBox.setText(node.getTranslateX.toString)
             yBox.setText(node.getTranslateY.toString)
             wBox.setText(node.getBoundsInParent.getWidth.toString)
@@ -48,17 +52,19 @@ object IDOProperties extends GridPane():
             scaleXBox.setText(node.getScaleX.toString)
             scaleYBox.setText(node.getScaleY.toString)
 
-      this.add(xLabel, 0, 0)
-      this.add(xBox, 1,  0)
-      this.add(yLabel, 0, 1)
-      this.add(yBox, 1, 1)
-      this.add(wLabel, 0, 2)
-      this.add(wBox, 1, 2)
-      this.add(hLabel, 0, 3)
-      this.add(hBox, 1, 3)
-      add(sXLabel, 0, 4)
-      this.add(scaleXBox, 1, 4)
-      add(sYLabel, 0, 5)
-      add(scaleYBox, 1, 5)
-      add(layerLabel, 0, 6)
-      add(layerBox, 1, 6)
+      add(name, 0, 0)
+      add(nameBox, 1, 0)
+      add(xLabel, 0, 1)
+      add(xBox, 1,  1)
+      add(yLabel, 0, 2)
+      add(yBox, 1, 2)
+      add(wLabel, 0, 3)
+      add(wBox, 1, 3)
+      add(hLabel, 0, 4)
+      add(hBox, 1, 4)
+      add(sXLabel, 0, 5)
+      add(scaleXBox, 1, 5)
+      add(sYLabel, 0, 6)
+      add(scaleYBox, 1, 6)
+      add(layerLabel, 0, 7)
+      add(layerBox, 1, 7)
