@@ -55,7 +55,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // changes selected node on click
   editor.objects.foreach(node =>
     node match
-      case a: ObjectNode => a.onMouseClicked = (event: MouseEvent) => editor.selectedNode.value = a
+      case a: ObjectNode =>
+        a.onMouseClicked = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a;
+        a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then Option(editor.selectedNode.value).foreach(n => IDOProperties.update(n)))
       case _ =>
   )
 
@@ -63,6 +65,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   editor.selectedNode.onChange((_, _, newNode) =>
     IDOProperties.update(newNode);
   )
+
+  // listeners for tools/buttons
+  IDToolbar.addRectangle.onAction = (event: ActionEvent) =>
 
   // listeners for IDOProperties input
   // name
