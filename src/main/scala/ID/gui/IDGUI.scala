@@ -79,8 +79,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     Option(editor.selectedNode.value).foreach(node =>
       IDOProperties.wBox.getText.toDoubleOption match
         case Some(n) if n>0 =>
-          val scaleFactor: Double = n / ((node.getBoundsInParent.getWidth)/node.getScaleX);
-          node.scaleX = scaleFactor
+          node.widthTo(n)
         case _ =>
       )
   // height
@@ -88,8 +87,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     Option(editor.selectedNode.value).foreach(node =>
       IDOProperties.hBox.getText.toDoubleOption match
         case Some(n) if n>0 =>
-          val scaleFactor: Double = n / ((node.getBoundsInParent.getHeight)/node.getScaleY);
-          node.scaleY = scaleFactor
+          node.heightTo(n)
         case _ =>
       )
   // layer
