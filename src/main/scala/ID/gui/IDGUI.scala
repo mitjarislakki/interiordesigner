@@ -52,11 +52,13 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
          project = Some(IDReader(file).readFile())
        else println("NOT NICE")
 
-  // changes selected node on click
+  // event handlers for ObjectNodes in editor
   editor.objects.foreach(node =>
     node match
       case a: ObjectNode =>
+        // select node on click if SEL tool in use
         a.onMouseClicked = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a;
+        // refresh IDOProperties on node drag if SEL tool in use
         a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then Option(editor.selectedNode.value).foreach(n => IDOProperties.update(n)))
       case _ =>
   )
