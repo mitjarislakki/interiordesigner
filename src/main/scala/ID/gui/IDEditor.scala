@@ -14,6 +14,12 @@ class IDEditor(project: Project) extends Pane:
   def objects = this.children
   val selectedNode = new ObjectProperty[ObjectNode]
   def initialize = ???
+  def addObject(node: ObjectNode) =
+    objects += node
+    node.shapes.headOption.foreach((shape: Shape, pos: Pos) =>
+      val (x, y) =  pos.xyTuple;
+      node.translateX = x;
+      node.translateY = y)
 
 val rec = new Rectangle:
   x = 0
@@ -35,5 +41,5 @@ val testNode2 = ObjectNode("test2", scala.collection.mutable.Buffer((rec2, new P
 object tempEditor extends IDEditor(new Project("lol", Buffer[IDObject]())):
   this.setPrefWidth(500)
   this.setPrefHeight(500)
-  objects ++= List(testNode, testNode2)
+  //objects ++= List(testNode, testNode2)
   objects.foreach(node => EventHelper.makeDraggable(node))

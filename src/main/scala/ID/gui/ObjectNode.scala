@@ -8,10 +8,15 @@ import scalafx.scene.shape.{Rectangle, Shape, Ellipse, Polygon}
 import scala.collection.mutable.Buffer
 
 class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _layer: Int = 0) extends javafx.scene.layout.StackPane:
+  def this(shape: Shape, pos: Pos) =
+    this("", Buffer((shape, pos)))
   private val nameLabel = Label(_name)
   
   val main = shapes.headOption.map(_._1)
   main.foreach(shape => getChildren.addAll(shape, nameLabel))
+  shapes.headOption.map(_._2).foreach( p =>
+    this.setTranslateX(p.x)
+    this.setTranslateY(p.y))
 
   def widthTo(width: Double) = shapes.foreach( (s: Shape , p: Pos) =>
     s match

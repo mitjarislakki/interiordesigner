@@ -1,8 +1,12 @@
 package ID.gui
 
 import scalafx.scene.Node
-import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.Includes._
+import scalafx.scene.input.{MouseDragEvent, MouseEvent, ScrollEvent}
+import scalafx.Includes.*
+import scalafx.scene.layout.Pane
+import scalafx.scene.shape.Rectangle
+import ID.gui.ObjectNode
+import ID.projects.Pos
 
 object EventHelper:
 
@@ -23,10 +27,10 @@ object EventHelper:
    * Takes a node as a parameter and adds a listener to make it draggable via mouse
    * @param node the node to make draggable
    */
-  def makeDraggable(node: Node): Unit =
+  def makeDraggable(node: Node, condition: => Boolean = true): Unit =
     val dG = new DragContext
     node.onMousePressed = (event: MouseEvent) =>
-      if true then
+      if condition then
         dG.anchorX = event.screenX
         dG.anchorY = event.screenY
         dG.initX = node.getTranslateX
@@ -34,10 +38,40 @@ object EventHelper:
       event.consume()
 
     node.onMouseDragged = (event: MouseEvent) =>
-      if true then
+      if condition then
         node.translateX = scala.math.max(0, dG.initX + event.screenX - dG.anchorX)
         node.translateY = scala.math.max(0, dG.initY + event.screenY - dG.anchorY)
       event.consume()
+
+  def rectOnDrag(pane: IDEditor, condition: => Boolean) =
+    val dG = new DragContext
+    val rect = Rectangle(100, 100, scalafx.scene.paint.Color.LightSkyBlue)
+    rect.opacity = 0.5
+    pane.onMousePressed = (event: MouseEvent) =>
+      if condition then
+        rect.translateX = event.getX
+        rect.translateY = event.getY
+        rect.setWidth(0)
+        rect.setHeight(0)
+        pane.children.add(rect)
+    pane.onMouseDragged = (event: MouseEvent) =>
+      if condition then
+        val newWidth = event.getX - rect.getTranslateX
+        val newHeight = event.getY - rect.getTranslateY
+        rect.setWidth(newWidth)
+        rect.setHeight(newHeight)
+    pane.onMouseReleased = (event: MouseEvent) =>
+      if condition then
+        val x = Rectangle(rect.getWidth, rect.getHeight)
+        val pos = Pos(rect.getTranslateX, rect.getTranslateY, 0.0)
+        val newNode = ObjectNode(x, pos)
+        pane.children.remove(rect)
+        pane.children += newNode
+
+  def circOnDrag(pane: IDEditor, condition: => Boolean = true ) =
+    val dG = new DragContext
+    val circ = ???
+
 
 
   /**
