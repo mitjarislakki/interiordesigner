@@ -21,7 +21,7 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
   def widthTo(width: Double) = shapes.foreach( (s: Shape , p: Pos) =>
     s match
       case rect: Rectangle => rect.setWidth(width)
-      case oval: Ellipse => oval.setRadiusX(width)
+      case oval: Ellipse => oval.setRadiusX(width/2)
       case tri: Triangle =>
       case _ =>
   )
@@ -29,7 +29,7 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
   def heightTo(height: Double) = shapes.foreach( (s: Shape , p: Pos) =>
     s match
       case rect: Rectangle => rect.setHeight(height)
-      case oval: Ellipse => oval.setRadiusY(height)
+      case oval: Ellipse => oval.setRadiusY(height/2)
       case tri: Triangle =>
       case _ =>
   )
