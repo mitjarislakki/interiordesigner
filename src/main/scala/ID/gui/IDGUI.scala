@@ -79,6 +79,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // add rectangles
   EventHelper.rectOnDrag(editor, IDToolbar.addRectangle.isSelected)
 
+  // add ellipses
+  EventHelper.circOnDrag(editor, IDToolbar.addCircle.isSelected)
+
   val rect = Rectangle(10, 10, scalafx.scene.paint.Color.Green)
   val newNode = ObjectNode(rect, ID.projects.Pos())
   //editor.children += newNode
