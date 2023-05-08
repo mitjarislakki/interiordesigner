@@ -26,3 +26,11 @@ Started work on ObjectNode (stackpane) to hopefully handle transformations via m
 My initial technical plan isn't working out particularly well for the Project backend as turning a file into a Project class and then most of its information again into the GUI seems somewhat redundant given the graphical nature of the application.
 I'll probably need to request a time extension for this :(
 ~15+ hours including a lot of scalafx/javafx tutorials & stackoverflow.
+
+8.5.2023
+I've replaced scale transforms with methods in the ObjectNode class, so they're still in scale 1.0 in the output Pane,
+meaning I can probably implement some form of zoom in/out. Otherwise added a bunch of functions like adding ovals, rectangles,
+refactored event handling & more QOL changes. Main things that still need implementation are layers/object overlapping, file saving,
+scale set (how much 1m is on screen), rotation & if I have time then the object editor.
+Finally feeling better & without a fever today so I'll be trying to power through this from today till Sunday.
+~20 hours maybe? Most of it spent trying to figure out scalafx classes & methods and the odd way nodes change between javafx and scalafx implementations.
