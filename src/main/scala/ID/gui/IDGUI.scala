@@ -99,9 +99,6 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       Option(editor.selectedNode.value).foreach(node => editor.children.remove(node))
     case _ =>
 
-  // listeners for tools/buttons
-  IDToolbar.addRectangle.onAction = (event: ActionEvent) =>
-
   // listeners for IDOProperties input
   // name
   IDOProperties.nameBox.onKeyTyped = (event: KeyEvent) =>
