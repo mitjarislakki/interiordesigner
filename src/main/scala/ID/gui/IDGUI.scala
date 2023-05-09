@@ -32,7 +32,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   root.gridLinesVisible = true
   this.scene = new Scene(parent = root)
 
-  val outerPane = new scalafx.scene.control.ScrollPane()
+  val outerPane = scalafx.scene.control.ScrollPane()
   outerPane.setContent(editor)
 
   root.add(IDMenu.menuBar, 0, 0, 3, 1)
