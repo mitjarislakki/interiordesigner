@@ -55,6 +55,7 @@ object IDOProperties extends GridPane():
             hBox.setText(node.getBoundsInParent.getHeight.toString)
             scaleXBox.setText(node.getScaleX.toString)
             scaleYBox.setText(node.getScaleY.toString)
+            layerBox.setText(node.layer.toString)
             node.main.foreach(shape => colorPicker.value = shape.getFill.asInstanceOf[javafx.scene.paint.Color])
 
       add(name, 0, 0)
