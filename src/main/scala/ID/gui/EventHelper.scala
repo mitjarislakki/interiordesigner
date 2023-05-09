@@ -91,11 +91,13 @@ object EventHelper:
 
   def circOnDrag(pane: IDEditor, condition: => Boolean = true ) =
     val dG = new DragContext
-    val circ = Ellipse(0.0, 0.0)
+    val circ = Ellipse(100, 100)
     circ.setFill(scalafx.scene.paint.Color.LightSkyBlue)
     circ.opacity = 0.5
     pane.addEventHandler(MouseEvent.MousePressed, (event: MouseEvent) =>
       if condition then
+        dG.initX = event.getX;
+        dG.initY = event.getY;
         circ.translateX = event.getX ;
         circ.translateY = event.getY ;
         circ.radiusX = 0 ;
@@ -112,7 +114,7 @@ object EventHelper:
     pane.addEventHandler(MouseEvent.MouseReleased, (event: MouseEvent) =>
       if condition then
         val ellipse = Ellipse(circ.getRadiusX, circ.getRadiusY) ;
-        val pos = Pos(circ.getTranslateX, circ.getTranslateY, 0.0) ;
+        val pos = Pos(2 * circ.getTranslateX - event.getX, 2 * circ.getTranslateY - event.getY, 0.0) ;
         val newNode = ObjectNode(ellipse, pos) ;
         pane.children.remove(circ) ;
         pane.children += newNode ;

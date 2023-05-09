@@ -32,8 +32,8 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   root.gridLinesVisible = true
   this.scene = new Scene(parent = root)
 
-  val outerPane = new scalafx.scene.layout.StackPane()
-  outerPane.children = editor
+  val outerPane = new scalafx.scene.control.ScrollPane()
+  outerPane.setContent(editor)
 
   root.add(IDMenu.menuBar, 0, 0, 3, 1)
   root.add(IDToolbar, 0, 1)
@@ -41,7 +41,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   root.add(IDOProperties, 2, 1)
   root.autosize()
 
-  // helper function
+  // helper functions to create fast column & row constraints
   private def cC(input: Priority) =
     new ColumnConstraints:
       hgrow = input

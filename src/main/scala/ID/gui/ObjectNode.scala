@@ -12,9 +12,10 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
     this("", Buffer((shape, pos)))
   private val nameLabel = Label(_name)
   
-  val main = shapes.headOption.map(_._1)
-  main.foreach(shape => getChildren.addAll(shape, nameLabel))
-  shapes.headOption.map(_._2).foreach( p =>
+  val baseShape = shapes.headOption.map(_._1)
+  private val basePos = shapes.headOption.map(_._2)
+  baseShape.foreach(shape => getChildren.addAll(shape, nameLabel))
+  basePos.foreach( p =>
     this.setTranslateX(p.x)
     this.setTranslateY(p.y))
 
@@ -48,6 +49,6 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
   def name = nameLabel.getText
 
   def setName(input: String) = nameLabel.setText(input)
-  
-  def setColor(color: Color) = main.foreach(_.setFill(color))
+
+  def setColor(color: Color) = baseShape.foreach(_.setFill(color))
 
