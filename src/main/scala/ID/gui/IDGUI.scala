@@ -120,6 +120,14 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // Y pos
   IDOProperties.yBox.onKeyTyped = (event: KeyEvent) =>
       Option(editor.selectedNode.value).foreach(node => IDOProperties.yBox.getText.toDoubleOption.foreach(node.setTranslateY(_)))
+  // length
+  IDOProperties.lBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node =>
+      IDOProperties.lBox.getText.toDoubleOption match
+        case Some(n) if n>0 =>
+          node.lengthTo(n)
+        case _ =>
+      )
   // width
   IDOProperties.wBox.onKeyTyped = (event: KeyEvent) =>
     Option(editor.selectedNode.value).foreach(node =>
@@ -132,10 +140,14 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   IDOProperties.hBox.onKeyTyped = (event: KeyEvent) =>
     Option(editor.selectedNode.value).foreach(node =>
       IDOProperties.hBox.getText.toDoubleOption match
-        case Some(n) if n>0 =>
-          node.heightTo(n)
+        case Some(n) if n>0 => node.setVHeight(n)
         case _ =>
-      )
+    )
+  //rotation
+  IDOProperties.rBox.onKeyTyped = (event: KeyEvent) =>
+    Option(editor.selectedNode.value).foreach(node =>
+      IDOProperties.rBox.getText.toDoubleOption.foreach(n => node.rotate = n)
+    )
   // layer
   IDOProperties.layerBox.onKeyTyped = (event: KeyEvent) =>
     Option(editor.selectedNode.value).foreach(node =>

@@ -18,7 +18,7 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
     this.setTranslateX(p.x)
     this.setTranslateY(p.y))
 
-  def widthTo(width: Double) = shapes.foreach( (s: Shape , p: Pos) =>
+  def lengthTo(width: Double) = shapes.foreach((s: Shape, p: Pos) =>
     s match
       case rect: Rectangle => rect.setWidth(width)
       case oval: Ellipse => oval.setRadiusX(width/2)
@@ -26,7 +26,7 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
       case _ =>
   )
 
-  def heightTo(height: Double) = shapes.foreach( (s: Shape , p: Pos) =>
+  def widthTo(height: Double) = shapes.foreach((s: Shape, p: Pos) =>
     s match
       case rect: Rectangle => rect.setHeight(height)
       case oval: Ellipse => oval.setRadiusY(height/2)
@@ -34,10 +34,16 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
       case _ =>
   )
 
-  def setLayer(n: Int) =
-    if n >= 0 then _layer = n
+  private var _vHeight = 0.0
+  def vHeight = _vHeight
+
+  def setVHeight(input: Double) =
+    _vHeight = input
 
   def layer = _layer
+
+  def setLayer(n: Int) =
+    if n >= 0 then _layer = n
 
   def name = nameLabel.getText
 

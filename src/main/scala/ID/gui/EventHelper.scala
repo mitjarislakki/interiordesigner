@@ -41,14 +41,17 @@ object EventHelper:
 
     node.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) =>
       if condition then
-        val (x, y) = (node.getTranslateX, node.getTranslateY);
-        node.translateX = scala.math.max(0, dG.initX + event.screenX - dG.anchorX) ;
-        node.translateY = scala.math.max(0, dG.initY + event.screenY - dG.anchorY)
+        val (x, y) = (node.getTranslateX, node.getTranslateY)
+        val (candidateX, candidateY) = (scala.math.max(0, dG.initX + event.screenX - dG.anchorX), scala.math.max(0, dG.initY + event.screenY - dG.anchorY));
+        node.translateX = candidateX;
+        node.translateY = candidateY
         val candidate = node.getBoundsInParent
-        val compObjects = comparison(node.layer)
-        if compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent)) then
-          node.translateX = x;
+        val compObjects = comparison(node.layer) ++ comparison(0)
+        def hasOverlap = compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent))
+        if hasOverlap then
           node.translateY = y
+          if hasOverlap then
+            node.translateX = x
       ;
       event.consume()
     )
