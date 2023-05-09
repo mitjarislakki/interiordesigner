@@ -37,6 +37,8 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
   def setLayer(n: Int) =
     if n >= 0 then _layer = n
 
+  def layer = _layer
+
   def name = nameLabel.getText
 
   def setName(input: String) = nameLabel.setText(input)

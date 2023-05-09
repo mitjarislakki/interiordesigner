@@ -7,13 +7,30 @@ import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color.*
 import scalafx.scene.shape.*
 import scalafx.Includes.jfxNode2sfx
+import scalafx.collections.ObservableBuffer
+import scalafx.scene.shape.Rectangle
 
 import scala.collection.mutable.Buffer
 
 class IDEditor(project: Project) extends Pane:
+
+  objects.foreach(node => node match
+  case v: ObjectNode => EventHelper.makeDraggable(v, true, objectsAtLayer)
+  case _ => )
+
   def objects = this.children
+
+  def objectsAtLayer(n: Int) =
+    val found = scala.collection.mutable.ListBuffer[ObjectNode]()
+    objects.foreach(node => node match
+      case v: ObjectNode => if v.layer == n then found += v
+      case _ =>)
+    found
+
   val selectedNode = new ObjectProperty[ObjectNode]
+
   def initialize = ???
+
   def addObject(node: ObjectNode) =
     objects += node
     node.shapes.headOption.foreach((shape: Shape, pos: Pos) =>
@@ -41,5 +58,5 @@ val testNode2 = ObjectNode("test2", scala.collection.mutable.Buffer((rec2, new P
 object tempEditor extends IDEditor(new Project("lol", Buffer[IDObject]())):
   this.setPrefWidth(500)
   this.setPrefHeight(500)
-  //objects ++= List(testNode, testNode2)
-  objects.foreach(node => EventHelper.makeDraggable(node))
+
+

@@ -27,7 +27,7 @@ object EventHelper:
    * Takes a node as a parameter and adds a listener to make it draggable via mouse
    * @param node the node to make draggable
    */
-  def makeDraggable(node: Node, condition: => Boolean = true): Unit =
+  def makeDraggable(node: ObjectNode, condition: => Boolean = true, comparison: Int => Iterable[ObjectNode]): Unit =
     val dG = new DragContext
     node.addEventHandler(MouseEvent.MousePressed, (event: MouseEvent) =>
       if condition then
@@ -41,8 +41,14 @@ object EventHelper:
 
     node.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) =>
       if condition then
+        val (x, y) = (node.getTranslateX, node.getTranslateY);
         node.translateX = scala.math.max(0, dG.initX + event.screenX - dG.anchorX) ;
         node.translateY = scala.math.max(0, dG.initY + event.screenY - dG.anchorY)
+        val candidate = node.getBoundsInParent
+        val compObjects = comparison(node.layer)
+        if compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent)) then
+          node.translateX = x;
+          node.translateY = y
       ;
       event.consume()
     )
@@ -108,8 +114,6 @@ object EventHelper:
         pane.children.remove(circ) ;
         pane.children += newNode ;
     )
-
-
 
   /**
    * TODO

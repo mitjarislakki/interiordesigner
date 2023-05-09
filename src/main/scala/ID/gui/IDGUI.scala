@@ -56,10 +56,11 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     for change <- chs do
       change match
         case ObservableBuffer.Add(_, list) =>
-          list.foreach(node =>
-            println("Node added");
-            makeSelectable(node);
-            EventHelper.makeDraggable(node)
+          list.foreach(node => node match
+            case v: ObjectNode =>
+              makeSelectable(node);
+              EventHelper.makeDraggable(v, IDToolbar.select.isSelected, editor.objectsAtLayer)
+            case _ =>
           )
         case ObservableBuffer.Remove(_, node: ObjectNode) => println("Node deleted")
         case _ =>
