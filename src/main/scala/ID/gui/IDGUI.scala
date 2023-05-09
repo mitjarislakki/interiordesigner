@@ -7,7 +7,7 @@ import scalafx.scene.paint.Color.*
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent, ScrollEvent}
 import scalafx.scene.control.{Button, Label, Menu, MenuBar, MenuItem, SeparatorMenuItem, ToolBar}
-import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, Pane, RowConstraints}
+import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, Pane, Priority, RowConstraints}
 import scalafx.scene.text.Font
 import ID.projects.Project
 import ID.files.IDReader
@@ -32,14 +32,24 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   root.gridLinesVisible = true
   this.scene = new Scene(parent = root)
 
-  val test = new Pane()
+  val outerPane = new scalafx.scene.layout.StackPane()
+  outerPane.children = editor
 
-  root.add(test, 1, 1)
   root.add(IDMenu.menuBar, 0, 0, 3, 1)
   root.add(IDToolbar, 0, 1)
-  root.add(editor, 1, 1)
+  root.add(outerPane, 1, 1)
   root.add(IDOProperties, 2, 1)
-  editor.autosize()
+  root.autosize()
+
+  // helper function
+  private def cC(input: Priority) =
+    new ColumnConstraints:
+      hgrow = input
+  private def rC(input: Priority) =
+    new RowConstraints:
+      vgrow = input
+  root.columnConstraints = List(cC(Priority.Never), cC(Priority.Always), cC(Priority.Never))
+  root.rowConstraints = List(rC(Priority.Never), rC(Priority.Always))
 
   // listener for new nodes in children of editor
   editor.objects.onChange { (obs, chs) =>
@@ -47,7 +57,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       change match
         case ObservableBuffer.Add(_, list) =>
           list.foreach(node =>
-            println("Node added")
+            println("Node added");
             makeSelectable(node);
             EventHelper.makeDraggable(node)
           )
