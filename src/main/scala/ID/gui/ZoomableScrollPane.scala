@@ -4,14 +4,15 @@ import scalafx.scene.input.ScrollEvent
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.geometry.Insets
-import scalafx.scene.Node
+import scalafx.scene.{Group, Node}
 import scalafx.scene.layout.CornerRadii
 
 class ZoomableScrollPane(child: Node) extends ScrollPane:
   val bgfill = scalafx.scene.layout.BackgroundFill(scalafx.scene.paint.Color.LightSkyBlue, CornerRadii.Empty, Insets.Empty)
   val bg = new scalafx.scene.layout.Background(Array(bgfill))
   this.setBackground(bg)
-  content = child
+  val inner = Group(child)
+  content = inner
   pannable = false
   fitToHeight = false
   fitToWidth = false
