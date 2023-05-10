@@ -31,8 +31,8 @@ object EventHelper:
     val dG = new DragContext
     node.addEventHandler(MouseEvent.MousePressed, (event: MouseEvent) =>
       if condition then
-        dG.anchorX = event.screenX ;
-        dG.anchorY = event.screenY ;
+        dG.anchorX = event.x ;
+        dG.anchorY = event.y ;
         dG.initX = node.getTranslateX ;
         dG.initY = node.getTranslateY ;
       ;
@@ -42,7 +42,8 @@ object EventHelper:
     node.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) =>
       if condition then
         val (x, y) = (node.getTranslateX, node.getTranslateY)
-        val (candidateX, candidateY) = (scala.math.max(0, dG.initX + event.screenX - dG.anchorX), scala.math.max(0, dG.initY + event.screenY - dG.anchorY));
+        val candidateX = x + (event.x - dG.anchorX)
+        val candidateY = y + (event.y - dG.anchorY);
         node.translateX = candidateX;
         node.translateY = candidateY
         val candidate = node.getBoundsInParent

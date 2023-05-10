@@ -12,17 +12,25 @@ class ZoomableScrollPane(child: Node) extends ScrollPane:
   val bg = new scalafx.scene.layout.Background(Array(bgfill))
   this.setBackground(bg)
   content = child
-  pannable = true
+  pannable = false
   fitToHeight = false
   fitToWidth = false
-  this.onScroll = (event) =>
-    val zoomFactor = 1.1 // adjust this to change zoom sensitivity
-    val deltaY = event.deltaY.get
-    if (deltaY < 0)
-      child.scaleX.value /= zoomFactor
-      child.scaleY.value /= zoomFactor
-    else if (deltaY > 0)
-      child.scaleX.value *= zoomFactor
-      child.scaleY.value *= zoomFactor
-    event.consume()
+
+  this.addEventHandler(ScrollEvent.Scroll, (event) =>
+    val zoomFactor = 1.1
+    val deltaY = event.getDeltaY
+    val deltaX = event.getDeltaX
+    if event.isControlDown then
+      if deltaY < 0 then
+        child.scaleX.value /= zoomFactor ;
+        child.scaleY.value /= zoomFactor
+      else if deltaY > 0 then
+        child.scaleX.value *= zoomFactor ;
+        child.scaleY.value *= zoomFactor ;
+      event.consume();
+    else
+      child.translateX = child.getTranslateX + deltaX;
+      child.translateY = child.getTranslateY + deltaY
+
+  )
 end ZoomableScrollPane

@@ -13,11 +13,12 @@ import scalafx.scene.shape.Rectangle
 import scala.collection.mutable.Buffer
 
 class IDEditor(project: Project) extends Pane:
+  style = "-fx-background-color: white"
 
   objects.foreach(node => node match
   case v: ObjectNode => EventHelper.makeDraggable(v, true, objectsAtLayer)
   case _ => )
-
+  
   def objects = this.children
 
   def objectsAtLayer(n: Int) =
