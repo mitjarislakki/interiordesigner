@@ -3,7 +3,8 @@ package ID.gui
 import scalafx.scene.control.{ColorPicker, Label, TextField}
 import scalafx.geometry.Insets
 import scalafx.scene.Node
-import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii, GridPane}
+import scalafx.scene.layout.Priority.Always
+import scalafx.scene.layout.{Background, BackgroundFill, ColumnConstraints, CornerRadii, GridPane}
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.*
 import scalafx.scene.text.Font
@@ -57,22 +58,10 @@ object IDOProperties extends GridPane():
             rBox.setText(node.getRotate.toString)
             layerBox.setText(node.layer.toString)
             node.baseShape.foreach(shape => colorPicker.value = shape.getFill.asInstanceOf[javafx.scene.paint.Color])
-
-      add(name, 0, 0)
-      add(nameBox, 1, 0)
-      add(xLabel, 0, 1)
-      add(xBox, 1,  1)
-      add(yLabel, 0, 2)
-      add(yBox, 1, 2)
-      add(lengthLabel, 0, 3)
-      add(lBox, 1, 3)
-      add(widthLabel, 0, 4)
-      add(wBox, 1, 4)
-      add(heightLabel, 0, 5)
-      add(hBox, 1, 5)
-      add(rotationLabel, 0, 6)
-      add(rBox, 1, 6)
-      add(layerLabel, 0, 7)
-      add(layerBox, 1, 7)
-      add(colorLabel, 0, 8)
-      add(colorPicker, 1, 8)
+      val contents = List(name, nameBox, xLabel, xBox, yLabel, yBox, lengthLabel, lBox, widthLabel, wBox, heightLabel, hBox, rotationLabel, rBox, layerLabel, layerBox, colorLabel, colorPicker)
+      // loop to initialize contents
+      var contentIndex = 0
+      for i <- 0 until contents.size/2 do
+            for j <- 0 to 1 do
+                  add(contents(contentIndex), j, i)
+                  contentIndex += 1
