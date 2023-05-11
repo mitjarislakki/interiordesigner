@@ -31,8 +31,8 @@ object EventHelper:
     val dG = new DragContext
     node.addEventHandler(MouseEvent.MousePressed, (event: MouseEvent) =>
       if condition then
-        dG.anchorX = event.x ;
-        dG.anchorY = event.y ;
+        dG.anchorX = event.sceneX ;
+        dG.anchorY = event.sceneY ;
         dG.initX = node.getTranslateX ;
         dG.initY = node.getTranslateY ;
       ;
@@ -42,10 +42,14 @@ object EventHelper:
     node.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) =>
       if condition then
         val (x, y) = (node.getTranslateX, node.getTranslateY)
-        val candidateX = x + (event.x - dG.anchorX)
-        val candidateY = y + (event.y - dG.anchorY);
+        val (dx, dy) = (event.sceneX - dG.anchorX, event.sceneY - dG.anchorY)
+        val (scaleX, scaleY) = (node.getParent.getScaleX, node.getParent.getScaleY)
+        val candidateX = x + (dx/scaleX)
+        val candidateY = y + (dy/scaleY);
         node.translateX = candidateX;
-        node.translateY = candidateY
+        node.translateY = candidateY;
+        dG.anchorX = event.sceneX;
+        dG.anchorY = event.sceneY
         val candidate = node.getBoundsInParent
         val compObjects = comparison(node.layer) ++ comparison(0)
         def hasOverlap = compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent))
