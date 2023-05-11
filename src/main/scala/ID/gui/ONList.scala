@@ -1,26 +1,16 @@
 package ID.gui
 
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.Node
-import scalafx.scene.control.ListView
+import scalafx.scene.control.{ListCell, ListView}
 import scalafx.scene.layout.GridPane
+import javafx.scene.Node
+import scalafx.geometry.Pos
 
 
-class ONList(tracked: ObservableBuffer[javafx.scene.Node]) extends GridPane():
-  val map = tracked.groupBy(node => node match
-    case v: ObjectNode => v.layer
-    case _ => -1)
-  tracked.onChange { (obs, chs) =>
-    for change <- chs do
-      change match
-        case ObservableBuffer.Add(_, list) =>
-          list.foreach(node => node match
-            case v: ObjectNode =>
-            case _ =>
-          )
-        case ObservableBuffer.Remove(_, list) => list.foreach(node => node match
-          case v: ObjectNode =>
-          case _ =>
-        )
-        case _ =>
-  }
+class ONList(input: ObservableBuffer[Node]) extends GridPane():
+  val contents = List("Bananas", "Apples", "Pairs", "Lychees", "Strawberries", "Blueberries")
+  val nodeList = new ListView(contents)
+  add(nodeList, 0, 0)
+  def setContent(nodes: Iterable[ObjectNode]) = ???
+  class ObjectNodeCell extends ListCell[String]:
+    alignment = Pos.Center
