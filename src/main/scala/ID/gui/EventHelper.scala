@@ -47,16 +47,16 @@ object EventHelper:
         val candidateX = x + (dx/scaleX)
         val candidateY = y + (dy/scaleY);
         node.translateX = candidateX;
-        node.translateY = candidateY;
-        dG.anchorX = event.sceneX;
-        dG.anchorY = event.sceneY
+        node.translateY = candidateY
         val candidate = node.getBoundsInParent
         val compObjects = comparison(node.layer) ++ comparison(0)
         def hasOverlap = compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent))
         if hasOverlap then
+          node.translateX = x;
           node.translateY = y
-          if hasOverlap then
-            node.translateX = x
+        else
+          dG.anchorX = event.sceneX;
+          dG.anchorY = event.sceneY
       ;
       event.consume()
     )
