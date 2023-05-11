@@ -1,9 +1,12 @@
 package ID.gui
 import ID.projects.Pos
-import scalafx.scene.control.Label
+import scalafx.scene.control.{ContextMenu, Label, MenuItem}
 import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Rectangle, Shape, Ellipse, Polygon}
+import scalafx.scene.shape.{Ellipse, Polygon, Rectangle, Shape}
+import scalafx.event.EventHandler
+import scalafx.scene.input.ContextMenuEvent
+import scalafx.Includes.*
 
 import scala.collection.mutable.Buffer
 
@@ -19,6 +22,11 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
     this.setTranslateX(p.x)
     this.setTranslateY(p.y))
 
+  def flipHorizontal() = getChildren.foreach(n => n match
+    case v: javafx.scene.shape.Shape =>
+      println("reached");
+      v.scaleX = -v.getScaleX
+    case _ =>)
   def lengthTo(width: Double) = shapes.foreach((s: Shape, p: Pos) =>
     s match
       case rect: Rectangle => rect.setWidth(width)
@@ -51,4 +59,13 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
   def setName(input: String) = nameLabel.setText(input)
 
   def setColor(color: Color) = baseShape.foreach(_.setFill(color))
+
+  this.onContextMenuRequestedProperty.setValue(rightClick)
+  private def window = this.getScene.getWindow
+  private val conMenu = new ContextMenu()
+  val del = MenuItem("Delete")
+  val flipH = MenuItem("Flip Horizontal")
+  flipH.onAction = _ => flipHorizontal()
+  conMenu.getItems.addAll(flipH, del)
+  private def rightClick(e:ContextMenuEvent) = conMenu.show(window, e.screenX, e.screenY)
 

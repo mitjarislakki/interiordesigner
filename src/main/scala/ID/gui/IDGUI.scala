@@ -36,9 +36,10 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // outerPane.setContent(editor)
 
   root.add(IDMenu.menuBar, 0, 0, 3, 1)
-  root.add(IDToolbar, 0, 1)
-  root.add(outerPane, 1, 1)
-  root.add(IDOProperties, 2, 1)
+  root.add(IDToolbar, 0, 1, 1, 2)
+  root.add(outerPane, 1, 1, 1, 2)
+  root.add(IDOProperties, 2, 1, 1, 1)
+  root.add(ONList(editor.children), 2, 2)
   root.autosize()
 
   // helper functions to create fast column & row constraints
@@ -48,7 +49,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   private def rC(input: Priority) =
     new RowConstraints:
       vgrow = input
-  root.columnConstraints = List(cC(Priority.Never), cC(Priority.Always), cC(Priority.Never))
+  root.columnConstraints = List(cC(Priority.Never), cC(Priority.Always), cC(Priority.Sometimes))
   root.rowConstraints = List(rC(Priority.Never), rC(Priority.Always))
 
   // listener for new nodes in children of editor
@@ -59,10 +60,14 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
           list.foreach(node => node match
             case v: ObjectNode =>
               makeSelectable(node);
-              EventHelper.makeDraggable(v, IDToolbar.select.isSelected, editor.objectsAtLayer)
+              EventHelper.makeDraggable(v, IDToolbar.select.isSelected, editor.objectsAtLayer);
+              v.del.onAction = e => editor.children.remove(v)
             case _ =>
           )
-        case ObservableBuffer.Remove(_, node: ObjectNode) => println("Node deleted")
+        case ObservableBuffer.Remove(_, list) => list.foreach(node => node match
+          case v: ObjectNode =>
+          case _ =>
+        )
         case _ =>
   }
 
@@ -109,6 +114,8 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       println("yeah pressed")
       Option(editor.selectedNode.value).foreach(node => editor.children.remove(node))
     case _ =>
+
+
 
   // listeners for IDOProperties input
   // name
