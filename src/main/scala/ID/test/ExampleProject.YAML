@@ -19,3 +19,20 @@ idobjects:
     rotation: 0
     color: D3D3D3
     pos: 185, 75, 0
+  - label: Hotplate
+    layer: 1
+    shapes:
+    - shape: rectangle
+      length: 33
+      width: 33
+      height: 5
+      rotation: 0
+      color: D3D3D3
+      pos: 60, 82, 40
+    - shape: oval
+      length: 27
+      width: 27
+      height: 1
+      color: 000000
+      rotation: 0
+      pos: 3, 3, 10

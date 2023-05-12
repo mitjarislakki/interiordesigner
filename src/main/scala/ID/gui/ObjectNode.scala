@@ -10,24 +10,30 @@ import scalafx.Includes.*
 
 import scala.collection.mutable.Buffer
 
-class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _layer: Int = 0) extends javafx.scene.layout.StackPane:
+class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private var _layer: Int = 0) extends javafx.scene.layout.StackPane:
   def this(shape: Shape, pos: Pos) =
     this("", Buffer((shape, pos)))
-  private val nameLabel = Label(_name)
-  
-  val baseShape = shapes.headOption.map(_._1)
-  private val basePos = shapes.headOption.map(_._2)
-  baseShape.foreach(shape => getChildren.addAll(shape, nameLabel))
-  basePos.foreach( p =>
-    this.setTranslateX(p.x)
-    this.setTranslateY(p.y))
 
+
+  private val nameLabel = Label(_name)
+
+
+  val baseShape = initialShapes.headOption.map(_._1)
+  private val basePos = initialShapes.headOption.map(_._2)
+
+  def initialize() =
+    baseShape.foreach(shape => getChildren.addAll(shape, nameLabel))
+    basePos.foreach( p =>
+      this.setTranslateX(p.x)
+      this.setTranslateY(p.y)
+      this.onContextMenuRequestedProperty.setValue(rightClick)
+    )
   def flipHorizontal() = getChildren.foreach(n => n match
     case v: javafx.scene.shape.Shape =>
       println("reached");
       v.scaleX = -v.getScaleX
     case _ =>)
-  def lengthTo(width: Double) = shapes.foreach((s: Shape, p: Pos) =>
+  def lengthTo(width: Double) = initialShapes.foreach((s: Shape, p: Pos) =>
     s match
       case rect: Rectangle => rect.setWidth(width)
       case oval: Ellipse => oval.setRadiusX(width/2)
@@ -35,7 +41,7 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
       case _ =>
   )
 
-  def widthTo(height: Double) = shapes.foreach((s: Shape, p: Pos) =>
+  def widthTo(height: Double) = initialShapes.foreach((s: Shape, p: Pos) =>
     s match
       case rect: Rectangle => rect.setHeight(height)
       case oval: Ellipse => oval.setRadiusY(height/2)
@@ -60,7 +66,6 @@ class ObjectNode(_name: String, val shapes: Buffer[(Shape, Pos)], private var _l
 
   def setColor(color: Color) = baseShape.foreach(_.setFill(color))
 
-  this.onContextMenuRequestedProperty.setValue(rightClick)
   private def window = this.getScene.getWindow
   private val conMenu = new ContextMenu()
   val del = MenuItem("Delete")

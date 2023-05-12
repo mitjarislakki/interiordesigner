@@ -2,10 +2,11 @@ package ID.files
 
 import java.io.*
 import scala.collection.mutable.Buffer
-import ID.projects._
+import ID.projects.*
+import ID.gui.ObjectNode
 
-class IDReader(file: File):
-  def readFile(): Project =
+object IDReader:
+  def readProject(file: File): Project =
     val fileIn =
       try
         FileReader(file)
@@ -16,8 +17,8 @@ class IDReader(file: File):
 
     var projectName: Option[String] = None
     var currentSection: Option[String] = None
-    var floorPlan: Option[String] = None
-    val objectbuffer = Buffer[Array[String]]()
+    var inSubSection = false
+    val objectbuffer = Buffer[ONContender]()
 
     var objectStepper = 0
     try
@@ -29,11 +30,18 @@ class IDReader(file: File):
 
         currentSection match
           case Some("idobjects:") =>
-            if inputLine.trim.startsWith("-") then
-              objectbuffer += new Array[String](9)
-              objectStepper = 0
-            objectbuffer.lastOption.foreach(n => n(objectStepper) = inputLine.split(':')(1).trim)
-            objectStepper += 1
+            val key = inputLine.trim.split(':').head
+            val value = inputLine.trim.split(':').tail.mkString.trim
+            if key == "- label" then // initialize new furniture object
+              inSubSection = false
+              val addition = new ONContender
+              objectbuffer += addition
+              addition.label = Some(value)
+            else if key == "layer" then // set layer to furniture object
+              objectbuffer.lastOption.foreach(_.layer = Some(value.toInt))
+            else if inSubSection then // add to layer
+              objectbuffer.lastOption.foreach(_.objects += value)
+            else if key == "shapes" then inSubSection = true
           case _ =>
         inputLine = lineReader.readLine()
       end while
@@ -42,24 +50,9 @@ class IDReader(file: File):
     finally
       lineReader.close()
     if projectName.isEmpty then throw Error("Project name undefined")
-    if objectbuffer.exists(_.contains(null)) then throw Error("Some object has missing parameters")
-    Project(projectName.get,
-      objectbuffer.map(a =>
-        val name = a(0)
-        val layer = a(1).toInt
-        val length = a(3)
-        val width = a(4)
-        val height = a(5)
-        val rotation = a(6)
-        val color = a(7)
-        val pos =
-          val asArray = a(8).split(',').map(_.trim.toInt)
-          Pos(asArray(0), asArray(1), asArray(2))
-        val shape = a(2)
-        IDObject(layer, name, Buffer[Shape](), pos)
-      )
-    )
-  end readFile
+    if objectbuffer.exists(!_.isValid) then throw Error("Some object has missing parameters")
+    Project(projectName.get, objectbuffer)
+  end readProject
 
   def myLs() =
     val currentDirectory = new File("./")

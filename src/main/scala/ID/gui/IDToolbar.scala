@@ -12,8 +12,8 @@ object IDToolbar extends ToolBar:
     val addRectangle = new ToggleButton {text = "REC"}
     val addCircle = new ToggleButton {text = "CIRC"}
     val addTriangle = new ToggleButton{text = "TRI"}
-    val temp = new ToggleButton{text = "TEMP"}
+    val oNEdit = new ToggleButton{text = "EDIT"}
 
     val group = new ToggleGroup
-    group.toggles = List(select, addRectangle, addCircle, addTriangle, temp)
-    content ++= List(select, addRectangle, addCircle, addTriangle, temp)
+    group.toggles = List(select, addRectangle, addCircle, addTriangle, oNEdit)
+    content ++= List(select, addRectangle, addCircle, addTriangle, oNEdit)

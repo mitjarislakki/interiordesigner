@@ -4,12 +4,13 @@ import scalafx.scene.control.{ColorPicker, Label, TextField}
 import scalafx.geometry.Insets
 import scalafx.scene.Node
 import scalafx.scene.layout.Priority.Always
-import scalafx.scene.layout.{Background, BackgroundFill, ColumnConstraints, CornerRadii, GridPane}
+import scalafx.scene.layout.{Background, BackgroundFill, ColumnConstraints, CornerRadii, GridPane, Priority, Region}
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.*
 import scalafx.scene.text.Font
 
 object IDOProperties extends GridPane():
+      maxWidth = Region.USE_PREF_SIZE
       padding = scalafx.geometry.Insets(10, 10, 10, 10)
       vgap = 5
       hgap = 5
@@ -37,7 +38,7 @@ object IDOProperties extends GridPane():
       val hBox = TextField()
       hBox.setPromptText("0")
 
-      val rotationLabel = Label("Y-Scale: ")
+      val rotationLabel = Label("Rotation: ")
       val rBox = TextField()
       rBox.setPromptText("0")
 
@@ -48,12 +49,14 @@ object IDOProperties extends GridPane():
       val colorLabel = Label("Color: ")
       val colorPicker = new ColorPicker
 
+      private def roundToDecimalString(input: Double): String =
+            "%.1f".formatLocal(java.util.Locale.ROOT, input)
       def update(node: ObjectNode) =
             nameBox.setText(node.name)
-            xBox.setText(node.getTranslateX.toString)
-            yBox.setText(node.getTranslateY.toString)
-            lBox.setText(node.getBoundsInParent.getWidth.toString)
-            wBox.setText(node.getBoundsInParent.getHeight.toString)
+            xBox.setText(roundToDecimalString(node.getTranslateX))
+            yBox.setText(roundToDecimalString(node.getTranslateY))
+            lBox.setText(node.getWidth.toString)
+            wBox.setText(node.getHeight.toString)
             hBox.setText(node.vHeight.toString)
             rBox.setText(node.getRotate.toString)
             layerBox.setText(node.layer.toString)
@@ -63,5 +66,8 @@ object IDOProperties extends GridPane():
       var contentIndex = 0
       for i <- 0 until contents.size/2 do
             for j <- 0 to 1 do
+                  val node = contents(contentIndex)
+                  node.minWidth = Region.USE_PREF_SIZE
+                  node.minHeight = Region.USE_PREF_SIZE
                   add(contents(contentIndex), j, i)
                   contentIndex += 1

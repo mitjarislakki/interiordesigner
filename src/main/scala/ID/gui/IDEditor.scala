@@ -1,6 +1,7 @@
 package ID.gui
 
 import ID.projects.{IDObject, Pos, Project}
+import ID.files.ONContender
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.Node
 import scalafx.scene.layout.Pane
@@ -14,7 +15,6 @@ import scala.collection.mutable.Buffer
 
 class IDEditor(project: Project) extends Pane:
   style = "-fx-background-color: white"
-
   objects.foreach(node => node match
   case v: ObjectNode => EventHelper.makeDraggable(v, true, objectsAtLayer)
   case _ => )
@@ -30,14 +30,12 @@ class IDEditor(project: Project) extends Pane:
 
   val selectedNode = new ObjectProperty[ObjectNode]
 
-  def initialize = ???
+  def initialize =
+    this.children.addAll(project.furniture.map(n =>
+      val tuple = n.composeObjectNode;
+      ObjectNode(tuple._1, tuple._2, tuple._3)
+    ))
 
-  def addObject(node: ObjectNode) =
-    objects += node
-    node.shapes.headOption.foreach((shape: Shape, pos: Pos) =>
-      val (x, y) =  pos.xyTuple;
-      node.translateX = x;
-      node.translateY = y)
 
 val rec = new Rectangle:
   x = 0
@@ -56,7 +54,7 @@ val rec2 = new Rectangle:
 val testNode = ObjectNode("test", scala.collection.mutable.Buffer((rec, new Pos(0, 0, 0))))
 val testNode2 = ObjectNode("test2", scala.collection.mutable.Buffer((rec2, new Pos(0, 0, 0))))
 
-object tempEditor extends IDEditor(new Project("lol", Buffer[IDObject]())):
+object tempEditor extends IDEditor(new Project("lol", Buffer[ONContender]())):
   this.setPrefWidth(500)
   this.setPrefHeight(500)
 

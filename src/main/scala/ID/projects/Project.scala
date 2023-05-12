@@ -1,9 +1,7 @@
 package ID.projects
+import ID.gui.ObjectNode
+
 import scala.collection.mutable.Buffer
+import ID.files.ONContender
 
-class Project(val name: String, val objects: Buffer[IDObject]):
-
-  def objectsAtLayer(n: Int) = objects.filter(_.layer==n)
-  def addObject(ob: IDObject): Unit = objects += ob
-  def removeObject(ob: IDObject): Unit = ???
-  def transformObject(ob: IDObject, f: IDObject => IDObject): Unit = ???
+class Project(val name: String, val furniture: Buffer[ONContender])
