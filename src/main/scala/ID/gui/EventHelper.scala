@@ -11,17 +11,13 @@ import ID.projects.Pos
 object EventHelper:
 
   /**
-   * Makes input node Zoomable via mouse scroll
-   * @param node the node to make zoomable
+   *  Rounds an object of type Double to 1 decimal and returns it as type String
+   * @param input type Double to round
+   * @return input parameter rounded to 1 decimal as String
    */
-  // TODO FIX THIS SHIT
-  def makeZoomable(node: Node) =
-    val dG = new DragContext
-    node.addEventHandler(ScrollEvent.Scroll, (event: ScrollEvent) =>
-      val delta = event.getTextDeltaY;
-      node.scaleX = node.getScaleX + delta/10 ;
-      node.scaleY = node.getScaleY + delta/10
-    )
+  def roundToDecimalString(input: Double): String =
+      "%.1f".formatLocal(java.util.Locale.ROOT, input)
+
 
    /**
    * Takes a node as a parameter and adds a listener to make it draggable via mouse

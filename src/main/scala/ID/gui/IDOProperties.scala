@@ -49,12 +49,10 @@ object IDOProperties extends GridPane():
       val colorLabel = Label("Color: ")
       val colorPicker = new ColorPicker
 
-      private def roundToDecimalString(input: Double): String =
-            "%.1f".formatLocal(java.util.Locale.ROOT, input)
       def update(node: ObjectNode) =
             nameBox.setText(node.name)
-            xBox.setText(roundToDecimalString(node.getTranslateX))
-            yBox.setText(roundToDecimalString(node.getTranslateY))
+            xBox.setText(EventHelper.roundToDecimalString(node.getTranslateX))
+            yBox.setText(EventHelper.roundToDecimalString(node.getTranslateY))
             lBox.setText(node.getWidth.toString)
             wBox.setText(node.getHeight.toString)
             hBox.setText(node.vHeight.toString)

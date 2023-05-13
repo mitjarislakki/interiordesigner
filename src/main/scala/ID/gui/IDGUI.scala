@@ -17,6 +17,7 @@ import scalafx.collections.ObservableBuffer
 import scalafx.event
 import scalafx.event.ActionEvent
 import scalafx.scene.shape.Rectangle
+import scalafx.stage.FileChooser.ExtensionFilter
 
 import scala.util.Random
 
@@ -27,10 +28,11 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
 
   val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
-  title = "Interior Designer"
   val root = GridPane()
   root.gridLinesVisible = true
   this.scene = new Scene(parent = root)
+
+  title = "Interior Designer"
 
 
   val outerPane = ZoomableScrollPane
@@ -42,6 +44,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   root.add(IDOProperties, 2, 1, 1, 1)
   root.add(oNView, 2, 2)
   root.autosize()
+
 
   // helper functions to create fast column & row constraints
   outerPane.hgrow = Priority.Always
@@ -58,17 +61,33 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
      if file != null then
        if (file.getName.endsWith(".YAML")) then
          Some(IDReader.readProject(file)).foreach(pro =>
-           println(pro.furniture);
-           setEditor(IDEditor(pro)))
-       else println("Not in .YAML format")
+           println("Println in IDGUI.scala (line 62)" + pro.furniture);
+           setEditor(IDEditor(pro));
+           updateTitle()
+         )
+       else
+         updateTitle()
+  // save project
+  IDMenu.saveProject.onAction = (event) =>
+    val t = new scalafx.stage.FileChooser()
+    t.title = "Save Project"
+    t.getExtensionFilters.addAll(new ExtensionFilter("Project File", "*.YAML*"))
+    val file = t.showSaveDialog(this)
+    if file != null then
+      outerPane.currentChild.foreach(editor => IDReader.writeProjectToFile(file, editor))
 
+  private var notification: Option[String] = None
+  def updateTitle() =
+    val name = outerPane.currentChild match
+      case Some(n) => n.projectName
+      case None => "[No Project selected]"
+    this.title = "Interior Designer - " + name + " - " + notification.getOrElse("[No notifications]")
 
   def setEditor(editor: IDEditor) =
     outerPane.setChild(editor)
     ONList.setInput(editor.children)
     setListeners(editor)
     editor.initialize()
-
 
 
   def setListeners(editor: IDEditor) =

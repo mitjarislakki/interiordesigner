@@ -1,40 +1,43 @@
 name: Epic Apartment
 floorplan: #path to image??
+dimensions: 800, 400, -1
 idobjects:
   - label: Desk
     layer: 1
+    rotation: 0
+    height: 0
     shapes:
-      shape: rectangle
+    - shape: rectangle
       length: 200
       width: 60
-      height: 72
       rotation: 0
       color: 964B00
       pos: 100, 10, 0
   - label: Chair
     layer: 1
+    rotation: 0
+    height: 0
     shapes:
-      shape: rectangle
+    - shape: rectangle
       length: 30
       width: 30
-      height: 40
       rotation: 0
       color: D3D3D3
       pos: 185, 75, 0
   - label: Hotplate
     layer: 1
+    rotation: 0
+    height: 0
     shapes:
     - shape: rectangle
       length: 33
       width: 33
-      height: 5
       rotation: 0
       color: D3D3D3
       pos: 60, 82, 40
     - shape: ellipse
-      length: 27
-      width: 27
-      height: 1
+      length: 14
+      width: 14
       rotation: 0
-      color: 000000
+      color: 0xa0522dff
       pos: 3, 3, 10

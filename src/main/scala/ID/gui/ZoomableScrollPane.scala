@@ -14,7 +14,10 @@ object ZoomableScrollPane extends ScrollPane:
   pannable = false
   fitToHeight = true
   fitToWidth = true
-  def setChild(child: Node) =
+  private var _currentChild: Option[IDEditor] = None
+  def currentChild = _currentChild
+  def setChild(child: IDEditor) =
+    _currentChild = Some(child)
     val outer = Group(child)
     content = outer
 
