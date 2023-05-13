@@ -15,15 +15,16 @@ object IDReader:
 
     val lineReader = BufferedReader(fileIn)
 
-    var projectName: Option[String] = None
-    var currentSection: Option[String] = None
-    var inSubSection = false
-    val objectbuffer = Buffer[ONContender]()
+    var projectName: Option[String] = None // gets value of project name if in file
+    var currentSection: Option[String] = None // major section
+    var inSubSection = false // subsection check for shapes
+    val objectbuffer = Buffer[ONContender]() // accumulator for Object Node contenders
 
-    var objectStepper = 0
+    var lineCount = 0
     try
       var inputLine = lineReader.readLine()
       while inputLine != null do
+        lineCount += 1
         if inputLine.startsWith("name:") && projectName.isEmpty then projectName = Some(inputLine.drop(5).trim) // add project name
 
         if inputLine == "idobjects:" then currentSection = Some(inputLine) // set selection to IDObjects
@@ -35,6 +36,7 @@ object IDReader:
             if key == "- label" then // initialize new furniture object
               inSubSection = false
               val addition = new ONContender
+              addition.startingLine = lineCount
               objectbuffer += addition
               addition.label = Some(value)
             else if key == "layer" then // set layer to furniture object
@@ -49,9 +51,11 @@ object IDReader:
       case e: IOException => throw Error("Some weird IO error lol")
     finally
       lineReader.close()
-    if projectName.isEmpty then throw Error("Project name undefined")
-    if objectbuffer.exists(!_.isValid) then throw Error("Some object has missing parameters")
-    Project(projectName.get, objectbuffer)
+    objectbuffer.foreach(i => if !i.defineObjectNodeParams() then throw Error(s"Error with nodes on line ${i.startingLine}"))
+    val name = projectName.getOrElse(throw LabelUndefinedError("Project name undefined"))
+    val furniture = objectbuffer.map(cont => cont.getNodeParams.getOrElse(throw Error(cont.toString))).toSeq
+    Project(name, furniture)
+
   end readProject
 
   def myLs() =

@@ -14,6 +14,8 @@ import scalafx.scene.shape.Rectangle
 import scala.collection.mutable.Buffer
 
 class IDEditor(project: Project) extends Pane:
+  prefWidth = 500
+  prefHeight = 500
   style = "-fx-background-color: white"
   objects.foreach(node => node match
   case v: ObjectNode => EventHelper.makeDraggable(v, true, objectsAtLayer)
@@ -30,11 +32,8 @@ class IDEditor(project: Project) extends Pane:
 
   val selectedNode = new ObjectProperty[ObjectNode]
 
-  def initialize =
-    this.children.addAll(project.furniture.map(n =>
-      val tuple = n.composeObjectNode;
-      ObjectNode(tuple._1, tuple._2, tuple._3)
-    ))
+  def initialize(): Unit =
+    this.children.addAll(project.initializeNodes)
 
 
 val rec = new Rectangle:
@@ -54,8 +53,6 @@ val rec2 = new Rectangle:
 val testNode = ObjectNode("test", scala.collection.mutable.Buffer((rec, new Pos(0, 0, 0))))
 val testNode2 = ObjectNode("test2", scala.collection.mutable.Buffer((rec2, new Pos(0, 0, 0))))
 
-object tempEditor extends IDEditor(new Project("lol", Buffer[ONContender]())):
-  this.setPrefWidth(500)
-  this.setPrefHeight(500)
+object tempEditor extends IDEditor(new Project("lol"))
 
 

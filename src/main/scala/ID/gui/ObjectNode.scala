@@ -11,6 +11,8 @@ import scalafx.Includes.*
 import scala.collection.mutable.Buffer
 
 class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private var _layer: Int = 0) extends javafx.scene.layout.StackPane:
+  def this(tuple: (String, Iterable[(Shape, Pos)], Int)) =
+    this(tuple._1, tuple._2, tuple._3)
   def this(shape: Shape, pos: Pos) =
     this("", Buffer((shape, pos)))
 

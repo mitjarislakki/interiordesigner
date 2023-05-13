@@ -3,22 +3,24 @@ floorplan: #path to image??
 idobjects:
   - label: Desk
     layer: 1
-    shape: rectangle
-    length: 200
-    width: 60
-    height: 72
-    rotation: 0
-    color: 964B00
-    pos: 100, 10, 0
+    shapes:
+      shape: rectangle
+      length: 200
+      width: 60
+      height: 72
+      rotation: 0
+      color: 964B00
+      pos: 100, 10, 0
   - label: Chair
     layer: 1
-    shape: rectangle
-    length: 30
-    width: 30
-    height: 40
-    rotation: 0
-    color: D3D3D3
-    pos: 185, 75, 0
+    shapes:
+      shape: rectangle
+      length: 30
+      width: 30
+      height: 40
+      rotation: 0
+      color: D3D3D3
+      pos: 185, 75, 0
   - label: Hotplate
     layer: 1
     shapes:
@@ -29,10 +31,10 @@ idobjects:
       rotation: 0
       color: D3D3D3
       pos: 60, 82, 40
-    - shape: oval
+    - shape: ellipse
       length: 27
       width: 27
       height: 1
-      color: 000000
       rotation: 0
+      color: 000000
       pos: 3, 3, 10

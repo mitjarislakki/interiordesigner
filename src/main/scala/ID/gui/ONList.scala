@@ -8,7 +8,7 @@ import scalafx.geometry.Pos
 
 
 object ONList extends GridPane():
-  def setInput(input: ObservableBuffer[Node]) = println("ok done")
+  def setInput(input: ObservableBuffer[Node]) = println("This is a temporary setInput method for ONList.scala // TODO")
   val contents = List("Bananas", "Apples", "Pairs", "Lychees", "Strawberries", "Blueberries")
   val nodeList = new ListView(contents)
   add(nodeList, 0, 0)

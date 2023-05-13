@@ -59,12 +59,33 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
      if file != null then
        if (file.getName.endsWith(".YAML")) then
          project = Some(IDReader.readProject(file))
+         project.foreach(pro =>
+           println(pro.furniture);
+           setEditor(IDEditor(pro)))
        else println("NOT NICE")
+
 
   def setEditor(editor: IDEditor) =
     outerPane.setChild(editor)
     ONList.setInput(editor.children)
-    // listener for new nodes in children of editor
+    setListeners(editor)
+    editor.initialize()
+
+
+
+  def setListeners(editor: IDEditor) =
+
+    // event handlers for ObjectNodes in editor
+    def makeSelectable(node: javafx.scene.Node) =
+      node match
+        case a: ObjectNode =>
+          // select node on click if SEL tool in use
+          a.onMousePressed = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a
+          // refresh IDOProperties on node drag if SEL tool in use
+          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then Option(editor.selectedNode.value).foreach(n => IDOProperties.update(n)))
+        case _ =>
+
+    // change listener for new nodes in children of editor
     editor.objects.onChange { (obs, chs) =>
       for change <- chs do
         change match
@@ -84,27 +105,16 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
           case _ =>
     }
 
-
-    // event handlers for ObjectNodes in editor
-    def makeSelectable(node: javafx.scene.Node) =
-      node match
-        case a: ObjectNode =>
-          // select node on click if SEL tool in use
-          a.onMousePressed = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a
-          // refresh IDOProperties on node drag if SEL tool in use
-          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then Option(editor.selectedNode.value).foreach(n => IDOProperties.update(n)))
-        case _ =>
-
-    // add rectangles
+    // Rectangle drag tool
     EventHelper.rectOnDrag(editor, IDToolbar.addRectangle.isSelected)
 
-    // add ellipses
+    // Ellipse drag tool
     EventHelper.circOnDrag(editor, IDToolbar.addCircle.isSelected)
 
-    // switch to Object Node editor
+    // TODO switch to Object Node editor
     IDToolbar.oNEdit.onAction = (event: ActionEvent) => println("nice")
 
-    // updates property values on node change
+    // Update IDProperties text field values on node change
     editor.selectedNode.onChange((_, _, newNode) =>
       IDOProperties.update(newNode);
     )
