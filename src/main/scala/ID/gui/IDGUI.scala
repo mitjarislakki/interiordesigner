@@ -51,18 +51,16 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
 
   // file chooser for "open project" -button in menu
-  var project: Option[Project] = None
   IDMenu.openProject.onAction = (event) =>
      val t = new scalafx.stage.FileChooser()
-     t.setTitle("Testing")
+     t.setTitle("Choose a project file with .YAML format")
      val file = t.showOpenDialog(this)
      if file != null then
        if (file.getName.endsWith(".YAML")) then
-         project = Some(IDReader.readProject(file))
-         project.foreach(pro =>
+         Some(IDReader.readProject(file)).foreach(pro =>
            println(pro.furniture);
            setEditor(IDEditor(pro)))
-       else println("NOT NICE")
+       else println("Not in .YAML format")
 
 
   def setEditor(editor: IDEditor) =
