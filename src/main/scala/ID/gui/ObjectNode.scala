@@ -2,13 +2,15 @@ package ID.gui
 import ID.projects.Pos
 import javafx.collections.ObservableList
 import scalafx.scene.control.{ContextMenu, Label, MenuItem}
-import scalafx.scene.layout.StackPane
+import scalafx.scene.layout.{Region, StackPane}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Ellipse, Polygon, Rectangle, Shape}
 import scalafx.event.EventHandler
 import scalafx.scene.input.ContextMenuEvent
 import scalafx.Includes.*
+import scalafx.beans.property.IntegerProperty
 import scalafx.collections.ObservableBuffer
+import scalafx.scene.text.Text
 
 import scala.collection.mutable.Buffer
 
@@ -18,8 +20,13 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   def this(shape: Shape, pos: Pos) =
     this("", Buffer((shape, pos)))
 
+  val layer = IntegerProperty(_layer)
+  layer.onChange{ (source, oldVal, newVal) =>
+    this.setViewOrder(- newVal.intValue())
+  }
 
-  private val nameLabel = Label(_name)
+  // private val nameLabel = Label(_name)
+  private val nameLabel = Text(_name)
   nameLabel.setViewOrder(-1)
 
 
@@ -27,6 +34,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   private val basePos = initialShapes.headOption.map(_._2)
 
   def initialize() =
+    this.setViewOrder(-_layer)
     baseShape.foreach(shape => getChildren.addAll(shape, nameLabel))
     basePos.foreach( p =>
       this.setTranslateX(p.x)
@@ -42,26 +50,46 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   def flipHorizontal() = getChildren.foreach(n => n match
     case v: javafx.scene.shape.Shape =>
       println("reached");
-      v.scaleX = -v.getScaleX
+      v.scaleX = - v.getScaleX
     case _ =>)
 
-  def lengthTo(width: Double) = initialShapes.foreach((s: Shape, p: Pos) =>
-    s match
-      case rect: Rectangle =>
-        val initWidth = rect.getWidth;
-        rect.setWidth(width)
-      case oval: Ellipse => oval.setRadiusX(width/2)
-      case tri: Triangle =>
-      case _ =>
-  )
+  def lengthTo(width: Double) =
+    baseShape.foreach(base =>
+      val baseWidth = base match
+        case rect: Rectangle => rect.getWidth
+        case ellipse: Ellipse => ellipse.getRadiusX
+        case _ => throw Error("Unknown base shape")
+      ;
+      this.getChildren.foreach(node =>
+          node match
+            case rect: javafx.scene.shape.Rectangle =>
+              val scale = rect.getWidth / baseWidth;
+              rect.setWidth(scale * width)
+            case ellipse: javafx.scene.shape.Ellipse =>
+              val scale = ellipse.getRadiusX / baseWidth;
+              ellipse.setRadiusX(scale * width)
+            case _ =>
+      )
+    )
 
-  def widthTo(height: Double) = initialShapes.foreach((s: Shape, p: Pos) =>
-    s match
-      case rect: Rectangle => rect.setHeight(height)
-      case oval: Ellipse => oval.setRadiusY(height/2)
-      case tri: Triangle =>
-      case _ =>
-  )
+  def widthTo(height: Double) =
+    baseShape.foreach(base =>
+      val baseHeight = base match
+        case rect: Rectangle => rect.getHeight
+        case ellipse: Ellipse => ellipse.getRadiusY
+        case _ => throw Error("Unknown base shape")
+      ;
+      this.getChildren.foreach(node =>
+          node match
+            case rect: javafx.scene.shape.Rectangle =>
+              val scale = rect.getHeight / baseHeight;
+              rect.setHeight(scale * height)
+            case ellipse: javafx.scene.shape.Ellipse =>
+              val scale = ellipse.getRadiusY / baseHeight;
+              ellipse.setRadiusY(scale * height)
+            case _ =>
+      )
+    )
 
   private var _vHeight = _height
 
@@ -69,10 +97,10 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   def setVHeight(input: Double) =
     _vHeight = input
 
-  def layer = _layer
+  def getLayer = layer.value
 
   def setLayer(n: Int) =
-    if n >= 0 then _layer = n
+    if n >= 0 then layer.value = n
 
   def name = nameLabel.getText
 
@@ -89,7 +117,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   conMenu.getItems.addAll(flipH, del)
   private def rightClick(e:ContextMenuEvent) = conMenu.show(window, e.screenX, e.screenY)
 
-  def fetchAttributes =
+  def fetchAttributes: (Vector[String], Vector[Vector[String]]) =
 
     def rTDS(i: Double) = EventHelper.roundToDecimalString(i)
 
@@ -115,14 +143,17 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
             s"pos: $x, $y"
           )
         case _ => Vector()
-
+    end composeAttributeVector
 
     val name = "- label: " + nameLabel.getText
     val rotation = "rotation: " + this.getRotate
     val height = "height: " + rTDS(vHeight)
 
-    val nodeInformation = Vector(name, "layer: " + layer, rotation, height,  "shapes:")
+    val nodeInformation = Vector(name, "layer: " + getLayer, rotation, height,  "shapes:")
 
     val shapes: ObservableBuffer[javafx.scene.Node] = getChildrenUnmodifiable.filter(n => n.isInstanceOf[javafx.scene.shape.Shape])
     val shapeInformation: Vector[Vector[String]] = shapes.headOption.map(f => composeAttributeVector(f, true)).getOrElse(Vector()) +: shapes.tail.map(f => composeAttributeVector(f, false)).toVector
     (nodeInformation, shapeInformation)
+  end fetchAttributes
+
+

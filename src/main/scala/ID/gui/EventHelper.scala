@@ -45,7 +45,7 @@ object EventHelper:
         node.translateX = candidateX;
         node.translateY = candidateY
         val candidate = node.getBoundsInParent
-        val compObjects = comparison(node.layer) ++ comparison(0)
+        val compObjects = comparison(node.getLayer) ++ comparison(0)
         def hasOverlap = compObjects.exists(n2 => (node != n2) && candidate.intersects(n2.getBoundsInParent))
         if hasOverlap then
           node.translateX = x;

@@ -15,38 +15,38 @@ object IDOProperties extends GridPane():
       vgap = 5
       hgap = 5
 
-      val name = Label("Name: ")
+      private val name = Label("Name: ")
       val nameBox = TextField()
 
-      val xLabel = Label("X: ")
+      private val xLabel = Label("X: ")
       val xBox = TextField()
       xBox.setPromptText("0")
       
-      val yLabel = Label("Y: ")
+      private val yLabel = Label("Y: ")
       val yBox = TextField()
       yBox.setPromptText("0")
       
-      val lengthLabel = Label("Length: ")
+      private val lengthLabel = Label("Length: ")
       val lBox = TextField()
       lBox.setPromptText("0")
 
-      val widthLabel = Label("Width: ")
+      private val widthLabel = Label("Width: ")
       val wBox = TextField()
       wBox.setPromptText("0")
 
-      val heightLabel = Label("Height: ")
+      private val heightLabel = Label("Height: ")
       val hBox = TextField()
       hBox.setPromptText("0")
 
-      val rotationLabel = Label("Rotation: ")
+      private val rotationLabel = Label("Rotation: ")
       val rBox = TextField()
       rBox.setPromptText("0")
 
-      val layerLabel = Label("Layer: ")
+      private val layerLabel = Label("Layer: ")
       val layerBox = TextField()
       layerBox.setPromptText("0")
 
-      val colorLabel = Label("Color: ")
+      private val colorLabel = Label("Color: ")
       val colorPicker = new ColorPicker
 
       def update(node: ObjectNode) =
@@ -57,11 +57,11 @@ object IDOProperties extends GridPane():
             wBox.setText(node.getHeight.toString)
             hBox.setText(node.vHeight.toString)
             rBox.setText(node.getRotate.toString)
-            layerBox.setText(node.layer.toString)
+            layerBox.setText(node.getLayer.toString)
             node.baseShape.foreach(shape => colorPicker.value = shape.getFill.asInstanceOf[javafx.scene.paint.Color])
-      val contents = List(name, nameBox, xLabel, xBox, yLabel, yBox, lengthLabel, lBox, widthLabel, wBox, heightLabel, hBox, rotationLabel, rBox, layerLabel, layerBox, colorLabel, colorPicker)
+      private val contents = List(name, nameBox, xLabel, xBox, yLabel, yBox, lengthLabel, lBox, widthLabel, wBox, heightLabel, hBox, rotationLabel, rBox, layerLabel, layerBox, colorLabel, colorPicker)
       // loop to initialize contents
-      var contentIndex = 0
+      private var contentIndex = 0
       for i <- 0 until contents.size/2 do
             for j <- 0 to 1 do
                   val node = contents(contentIndex)

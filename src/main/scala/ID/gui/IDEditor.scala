@@ -1,6 +1,6 @@
 package ID.gui
 
-import ID.projects.{IDObject, Pos, Project}
+import ID.projects.{Pos, Project}
 import ID.files.ONContender
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.Node
@@ -30,7 +30,7 @@ class IDEditor(project: Project) extends Pane:
   def objectsAtLayer(n: Int) =
     val found = scala.collection.mutable.ListBuffer[ObjectNode]()
     objects.foreach(node => node match
-      case v: ObjectNode => if v.layer == n then found += v
+      case v: ObjectNode => if v.getLayer == n then found += v
       case _ =>)
     found
 
