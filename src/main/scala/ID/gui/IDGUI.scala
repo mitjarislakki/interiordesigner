@@ -30,7 +30,6 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
   val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
   val root = GridPane()
-  root.gridLinesVisible = true
   this.scene = new Scene(parent = root)
 
   title = "Interior Designer"
@@ -78,7 +77,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   // exit button
   IDMenu.exitItem.onAction = event =>
     if offerSave() then Platform.exit()
-  
+
   // file chooser for "open project" -button in menu
   def openFile() =
     if offerSave() then
