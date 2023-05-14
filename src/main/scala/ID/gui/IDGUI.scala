@@ -57,8 +57,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
   IDMenu.newProject.onAction = (event) =>
     if offerSave() then
-      val t = Dialogs.newProjectDialog()
-      val result = t.getResult
+      val result = Dialogs.newProjectDialog()
       result.foreach(project =>
         val newEditor = IDEditor(project);
         setEditor(newEditor)
@@ -67,7 +66,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
   private def offerSave(): Boolean =
     val current = outerPane.currentChild
-    val saveCondition = current.flatMap(currentEditor => Dialogs.wishToSave().getResult)
+    val saveCondition = current.flatMap(currentEditor => Dialogs.wishToSave())
     saveCondition match
       case Some(true) => saveToFile()
       case _ =>
