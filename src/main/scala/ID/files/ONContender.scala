@@ -36,6 +36,7 @@ class ONContender:
             Ellipse(length, width);
           case _ => throw UnrecognizedShapeError("Unrecognized shape")
         ;
+        if length <= 0 || width <= 0 then throw IllegalArgumentException();
         shape.rotate = rotation;
         shape.setFill(color)
         (shape, pos)).toSeq
