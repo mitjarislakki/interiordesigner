@@ -14,6 +14,11 @@ class ONContender:
   var height: Option[Double] = None
   val objects = Buffer[String]()
   private var nodes: Option[Seq[(Shape, Pos)]] = None
+
+  /**
+   * Attempts to define a Seq[(Shape, Pos)] with the current 'objects' Buffer. Seq saved as option in  private var nodes on success.
+   * @return true or false depending on whether it was successfully defined.
+   */
   def defineObjectNodeParams(): Boolean =
     try
       val attributeList = objects.grouped(6)
@@ -49,8 +54,8 @@ class ONContender:
       case f: NoSuchElementException =>
         println("no such element")
         false
-  def getNodeParams: Option[(String, Seq[(Shape, Pos)], Int)] =
-    label.flatMap(n => layer.flatMap(l => nodes.map(s => (n, s, l))))
+  def getNodeParams: Option[(String, Seq[(Shape, Pos)], Int, Double, Double)] =
+    label.flatMap(n => layer.flatMap(l => rotation.flatMap(r => height.flatMap(h => nodes.map(s => (n, s, l, h, r))))))
 
   def isValid = label.isDefined && layer.isDefined && rotation.isDefined && height.isDefined && defineObjectNodeParams()
 

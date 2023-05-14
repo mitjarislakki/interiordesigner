@@ -14,31 +14,39 @@ import scalafx.scene.text.Text
 
 import scala.collection.mutable.Buffer
 
-class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private var _layer: Int = 0, _height: Double = 0) extends javafx.scene.layout.StackPane:
-  def this(tuple: (String, Iterable[(Shape, Pos)], Int)) =
-    this(tuple._1, tuple._2, tuple._3)
+class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], _layer: Int = 0, _height: Double = 0, _rotation: Double = 0) extends javafx.scene.layout.StackPane:
+  def this(tuple: (String, Iterable[(Shape, Pos)], Int, Double, Double)) =
+    this(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5)
   def this(shape: Shape, pos: Pos) =
     this("", Buffer((shape, pos)))
 
-  val layer = IntegerProperty(_layer)
+  // track render order in parent
+  private val layer = IntegerProperty(_layer)
   layer.onChange{ (source, oldVal, newVal) =>
     this.setViewOrder(- newVal.intValue())
   }
 
-  // private val nameLabel = Label(_name)
+  // name of ObjectNode
   private val nameLabel = Text(_name)
   nameLabel.setViewOrder(-1)
 
 
-  val baseShape = initialShapes.headOption.map(_._1)
+  private val baseShape = initialShapes.headOption.map(_._1)
   private val basePos = initialShapes.headOption.map(_._2)
 
+  def getBaseColor: javafx.scene.paint.Color =
+    baseShape.map(_.getFill.asInstanceOf[javafx.scene.paint.Color]).getOrElse(Color.White)
+
+  /**
+   * Sets up the node
+   */
   def initialize() =
     this.setViewOrder(-_layer)
     baseShape.foreach(shape => getChildren.addAll(shape, nameLabel))
     basePos.foreach( p =>
       this.setTranslateX(p.x)
       this.setTranslateY(p.y)
+      this.setRotate(_rotation)
       this.onContextMenuRequestedProperty.setValue(rightClick);
       initialShapes.tail.foreach((s: Shape, tp: Pos) =>
         getChildren.add(s);
@@ -57,7 +65,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
     baseShape.foreach(base =>
       val baseWidth = base match
         case rect: Rectangle => rect.getWidth
-        case ellipse: Ellipse => ellipse.getRadiusX
+        case ellipse: Ellipse => ellipse.getRadiusX * 2
         case _ => throw Error("Unknown base shape")
       ;
       this.getChildren.foreach(node =>
@@ -76,7 +84,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
     baseShape.foreach(base =>
       val baseHeight = base match
         case rect: Rectangle => rect.getHeight
-        case ellipse: Ellipse => ellipse.getRadiusY
+        case ellipse: Ellipse => ellipse.getRadiusY * 2
         case _ => throw Error("Unknown base shape")
       ;
       this.getChildren.foreach(node =>
@@ -117,6 +125,10 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
   conMenu.getItems.addAll(flipH, del)
   private def rightClick(e:ContextMenuEvent) = conMenu.show(window, e.screenX, e.screenY)
 
+  /**
+   * Fetches the attributes of this ObjectNode in YAML format for file saving
+   * @return attributes
+   */
   def fetchAttributes: (Vector[String], Vector[Vector[String]]) =
 
     def rTDS(i: Double) = EventHelper.roundToDecimalString(i)
@@ -146,7 +158,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], private v
     end composeAttributeVector
 
     val name = "- label: " + nameLabel.getText
-    val rotation = "rotation: " + this.getRotate
+    val rotation = "rotation: " + this.getRotate.toString
     val height = "height: " + rTDS(vHeight)
 
     val nodeInformation = Vector(name, "layer: " + getLayer, rotation, height,  "shapes:")

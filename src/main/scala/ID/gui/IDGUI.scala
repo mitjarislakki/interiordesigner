@@ -10,9 +10,9 @@ import scalafx.scene.control.{Button, ButtonType, Dialog, Label, Menu, MenuBar, 
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, Pane, Priority, RowConstraints}
 import scalafx.scene.text.Font
 import ID.projects.Project
-import ID.files.IDReader
+import ID.files.IDFileHandler
 import scalafx.Includes.*
-import scalafx.beans.property.ObjectProperty
+import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
 import scalafx.event
 import scalafx.event.ActionEvent
@@ -26,6 +26,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   width = 800
   height = 500
 
+  private val notification = StringProperty("[No notifications]")
 
   val primaryMonitor = java.awt.Toolkit.getDefaultToolkit.getScreenSize
   val root = GridPane()
@@ -51,6 +52,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   outerPane.vgrow = Priority.Always
   oNView.vgrow = Priority.Always
   IDToolbar.vgrow = Priority.Always
+  ONList.vgrow = Priority.Always
 
 
   // new project event
@@ -60,10 +62,12 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       val result = Dialogs.newProjectDialog()
       result.foreach(project =>
         val newEditor = IDEditor(project);
-        setEditor(newEditor)
+        setEditor(newEditor);
+        notification.value = "Project created"
       )
 
 
+  // offers to save the current file
   private def offerSave(): Boolean =
     val current = outerPane.currentChild
     val saveCondition = current.flatMap(currentEditor => Dialogs.wishToSave())
@@ -80,13 +84,14 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       val file = t.showOpenDialog(this)
       if file != null then
          if (file.getName.endsWith(".YAML")) then
-           Some(IDReader.readProject(file)).foreach(pro =>
+           val (newProject, newNotification) = IDFileHandler.readProject(file)
+           newProject.foreach(pro =>
              println("Println in IDGUI.scala (line 62)" + pro.furniture);
              setEditor(IDEditor(pro));
-             updateTitle()
            )
+           notification.value = newNotification
          else
-           updateTitle()
+           notification.value = "File not in .YAML file format"
   IDMenu.openProject.onAction = e => openFile()
 
   // save project
@@ -97,16 +102,16 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     t.initialFileName= "*.YAML"
     val file = t.showSaveDialog(this)
     if file != null then
-      outerPane.currentChild.foreach(editor => IDReader.writeProjectToFile(file, editor))
+      outerPane.currentChild.foreach(editor => notification.value = IDFileHandler.writeProjectToFile(file, editor))
   IDMenu.saveProject.onAction = e => saveToFile()
 
 
-  private var notification: Option[String] = None
+  notification.onChange((_, _, _) => updateTitle())
   def updateTitle() =
     val name = outerPane.currentChild match
       case Some(n) => n.projectName
       case None => "[No Project selected]"
-    this.title = "Interior Designer - " + name + " - " + notification.getOrElse("[No notifications]")
+    this.title = "Interior Designer - " + name + " - " + notification.getValue
 
   def setEditor(editor: IDEditor) =
     outerPane.setChild(editor)
@@ -115,6 +120,10 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     editor.initialize()
 
 
+  /**
+   * Sets GUI listeners to the editor given as input
+   * @param editor the editor to add/point listeners to
+   */
   def setListeners(editor: IDEditor) =
 
     // Fetches current selectedNode in Option
@@ -125,9 +134,12 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       node match
         case a: ObjectNode =>
           // select node on click if SEL tool in use
-          a.onMousePressed = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a
+          a.onMousePressed = (event: MouseEvent) =>
+            if IDToolbar.select.isSelected || IDToolbar.move.isSelected then
+              editor.selectedNode.value = a
           // refresh IDOProperties on node drag if SEL tool in use
-          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then currentSelection.foreach(n => IDOProperties.update(n)))
+          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) =>
+            if IDToolbar.move.isSelected then currentSelection.foreach(n => IDOProperties.update(n)))
         case _ =>
 
     // change listener for new nodes in children of editor
@@ -139,7 +151,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
               case v: ObjectNode =>
                 v.initialize();
                 makeSelectable(v);
-                EventHelper.makeDraggable(v, IDToolbar.select.isSelected, editor.objectsAtLayer);
+                EventHelper.makeDraggable(v, IDToolbar.move.isSelected, editor.objectsAtLayer);
                 v.del.onAction = e => editor.children.remove(v)
               case _ =>
             )
@@ -149,6 +161,18 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
           )
           case _ =>
     }
+
+    // Edit project
+    IDMenu.editProject.onAction = (event) =>
+      Dialogs.editProjectProperties().foreach(g =>
+        val (newName, newLength, newWidth, newHeight) = g;
+        editor.projectName = newName;
+        editor.prefWidth = newLength;
+        editor.prefHeight = newWidth;
+        editor.ceilingHeight = newHeight;
+        notification.value = "Project settings updated"
+      )
+
 
     // Rectangle drag tool
     EventHelper.rectOnDrag(editor, IDToolbar.addRectangle.isSelected)

@@ -2,7 +2,7 @@ package ID.gui
 
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.{ContentDisplay, ListCell, ListView}
-import scalafx.scene.layout.{GridPane, Region}
+import scalafx.scene.layout.{GridPane, Priority, Region}
 import javafx.scene.Node
 import scalafx.geometry.Pos
 import scalafx.scene.input.{ClipboardContent, DragEvent, MouseDragEvent, MouseEvent, TransferMode}
@@ -13,12 +13,14 @@ import java.util
 
 object ONList extends GridPane():
   minWidth = Region.USE_PREF_SIZE
-  def setInput(input: ObservableBuffer[Node]) = println("This is a temporary setInput method for ONList.scala // TODO")
-  val contents: ObservableBuffer[String] = ObservableBuffer("Bananas", "Apples", "Pairs", "Lychees", "Strawberries", "Blueberries")
+  def setInput(input: ObservableBuffer[Node]) =
+    ""
+  val contents: ObservableBuffer[String] = ObservableBuffer()
   private val contBuf = ObservableBuffer[String]()
   val nodeList = new ListView(contents):
     cellFactory = ((param: ListView[String]) => new oNCell())
   add(nodeList, 0, 0)
+  nodeList.vgrow = Priority.Always
   def setContent(nodes: Iterable[ObjectNode]) = ???
 
 
@@ -46,7 +48,7 @@ object ONList extends GridPane():
 
     this.onDragEntered = (event: DragEvent) =>
       if (event.getGestureSource.ne(thisCell) && event.getDragboard.hasString) then
-        this.setOpacity(0.3)
+        this.setOpacity(0.4)
 
 
     this.onDragExited = (event: DragEvent) =>

@@ -50,15 +50,15 @@ object IDOProperties extends GridPane():
       val colorPicker = new ColorPicker
 
       def update(node: ObjectNode) =
-            nameBox.setText(node.name)
-            xBox.setText(EventHelper.roundToDecimalString(node.getTranslateX))
-            yBox.setText(EventHelper.roundToDecimalString(node.getTranslateY))
-            lBox.setText(node.getWidth.toString)
-            wBox.setText(node.getHeight.toString)
-            hBox.setText(node.vHeight.toString)
-            rBox.setText(node.getRotate.toString)
-            layerBox.setText(node.getLayer.toString)
-            node.baseShape.foreach(shape => colorPicker.value = shape.getFill.asInstanceOf[javafx.scene.paint.Color])
+            nameBox.text = node.name
+            xBox.text = EventHelper.roundToDecimalString(node.getTranslateX)
+            yBox.text = EventHelper.roundToDecimalString(node.getTranslateY)
+            lBox.text = node.getWidth.toString
+            wBox.text = node.getHeight.toString
+            hBox.text = node.vHeight.toString
+            rBox.text = node.getRotate.toString
+            layerBox.text = node.getLayer.toString
+            colorPicker.value = node.getBaseColor
       private val contents = List(name, nameBox, xLabel, xBox, yLabel, yBox, lengthLabel, lBox, widthLabel, wBox, heightLabel, hBox, rotationLabel, rBox, layerLabel, layerBox, colorLabel, colorPicker)
       // loop to initialize contents
       private var contentIndex = 0

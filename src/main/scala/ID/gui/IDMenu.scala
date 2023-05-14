@@ -20,6 +20,6 @@ object IDMenu:
    val helpMenu = new Menu("Help")
 
 
-   fileMenu.items = List(newProject, openProject, saveProject, new SeparatorMenuItem, exitItem)
+   fileMenu.items = List(newProject, editProject, openProject, saveProject, new SeparatorMenuItem, exitItem)
    menuBar.menus = List(fileMenu, editMenu, viewMenu, helpMenu)
 
