@@ -5,7 +5,6 @@ ThisBuild / scalaVersion := "3.2.2"
 lazy val root = (project in file("."))
   .settings(
     name := "Interior Designer",
-    libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
     libraryDependencies += "org.scalafx" %% "scalafx" % "19.0.0-R30",
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
