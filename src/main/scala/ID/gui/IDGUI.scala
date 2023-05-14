@@ -86,7 +86,6 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
          if (file.getName.endsWith(".YAML")) then
            val (newProject, newNotification) = IDFileHandler.readProject(file)
            newProject.foreach(pro =>
-             println("Println in IDGUI.scala (line 62)" + pro.furniture);
              setEditor(IDEditor(pro));
            )
            notification.value = newNotification

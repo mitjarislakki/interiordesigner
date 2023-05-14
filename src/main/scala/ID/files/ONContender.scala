@@ -43,16 +43,12 @@ class ONContender:
       true
     catch
       case e: NumberFormatException =>
-        println("number format")
         false
       case g: IllegalArgumentException =>
-        println("illegal arg")
         false
       case h: IndexOutOfBoundsException =>
-        println("index")
         false
       case f: NoSuchElementException =>
-        println("no such element")
         false
   def getNodeParams: Option[(String, Seq[(Shape, Pos)], Int, Double, Double)] =
     label.flatMap(n => layer.flatMap(l => rotation.flatMap(r => height.flatMap(h => nodes.map(s => (n, s, l, h, r))))))
