@@ -42,6 +42,8 @@ class ONContender:
       nodes = Some(shapePosList)
       true
     catch
+      case s: UnrecognizedShapeError =>
+        false
       case e: NumberFormatException =>
         false
       case g: IllegalArgumentException =>

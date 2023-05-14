@@ -123,19 +123,6 @@ object EventHelper:
         pane.children.remove(circ) ;
     )
 
-  /**
-   * TODO
-   * @param node yo idk yet
-   */
-  def makeScalable(node: Node): Unit = ???
-
-
-  /**
-   * 
-   * @return
-   */
-  def makeSelection = ???
-
 
 private final class DragContext:
   var initX: Double = 0

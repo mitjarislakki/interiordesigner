@@ -14,7 +14,7 @@ import scalafx.scene.text.Text
 
 import scala.collection.mutable.Buffer
 
-class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], _layer: Int = 0, _height: Double = 0, _rotation: Double = 0) extends javafx.scene.layout.StackPane:
+class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], _layer: Int = 1, _height: Double = 0, _rotation: Double = 0) extends javafx.scene.layout.StackPane:
   def this(tuple: (String, Iterable[(Shape, Pos)], Int, Double, Double)) =
     this(tuple._1, tuple._2, tuple._3, tuple._4, tuple._5)
   def this(shape: Shape, pos: Pos) =
@@ -55,11 +55,6 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], _layer: I
       )
     )
 
-  def flipHorizontal() = getChildren.foreach(n => n match
-    case v: javafx.scene.shape.Shape =>
-      println("reached");
-      v.scaleX = - v.getScaleX
-    case _ =>)
 
   def lengthTo(width: Double) =
     baseShape.foreach(base =>
@@ -120,9 +115,7 @@ class ObjectNode(_name: String, initialShapes: Iterable[(Shape, Pos)], _layer: I
 
   private val conMenu = new ContextMenu()
   val del = MenuItem("Delete")
-  val flipH = MenuItem("Flip Horizontal")
-  flipH.onAction = _ => flipHorizontal()
-  conMenu.getItems.addAll(flipH, del)
+  conMenu.getItems.addAll(del)
   private def rightClick(e:ContextMenuEvent) = conMenu.show(window, e.screenX, e.screenY)
 
   /**

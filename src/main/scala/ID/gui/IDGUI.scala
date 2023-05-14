@@ -23,8 +23,8 @@ import scala.util.Random
 
 object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
-  width = 800
-  height = 500
+  width = 1600
+  height = 800
 
   private val notification = StringProperty("[No notifications]")
 
@@ -36,7 +36,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
 
   val outerPane = ZoomableScrollPane
-  setEditor(tempEditor)
+  setEditor(IDEditor(Project("Starting Room", (1200.0, 1200.0, 300.0))))
   val oNView = ONList
   root.add(IDMenu.menuBar, 0, 0, 3, 1)
   root.add(IDToolbar, 0, 1, 1, 2)
@@ -79,7 +79,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     if offerSave() then Platform.exit()
 
   // file chooser for "open project" -button in menu
-  def openFile() =
+  private def openFile() =
     if offerSave() then
       val t = new scalafx.stage.FileChooser()
       t.setTitle("Choose a project file with .YAML format")
@@ -96,7 +96,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   IDMenu.openProject.onAction = e => openFile()
 
   // save project
-  def saveToFile() =
+  private def saveToFile() =
     val t = new scalafx.stage.FileChooser()
     t.title = "Save Project"
     t.getExtensionFilters.addAll(new ExtensionFilter("Project File", "*.YAML*"))
@@ -108,13 +108,13 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
 
   notification.onChange((_, _, _) => updateTitle())
-  def updateTitle() =
+  private def updateTitle() =
     val name = outerPane.currentChild match
       case Some(n) => n.projectName
       case None => "[No Project selected]"
     this.title = "Interior Designer - " + name + " - " + notification.getValue
 
-  def setEditor(editor: IDEditor) =
+  private def setEditor(editor: IDEditor) =
     outerPane.setChild(editor)
     ONList.setInput(editor.children)
     setListeners(editor)
@@ -125,7 +125,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
    * Sets GUI listeners to the editor given as input
    * @param editor the editor to add/point listeners to
    */
-  def setListeners(editor: IDEditor) =
+  private def setListeners(editor: IDEditor) =
 
     // Fetches current selectedNode in Option
     def currentSelection: Option[ObjectNode] = Option(editor.selectedNode.value)

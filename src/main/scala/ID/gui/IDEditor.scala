@@ -19,9 +19,6 @@ class IDEditor(project: Project) extends Pane:
   prefWidth = project.initLength
   prefHeight = project.initWidth
   style = "-fx-background-color: white"
-  objects.foreach(node => node match
-  case v: ObjectNode => EventHelper.makeDraggable(v, true, objectsAtLayer)
-  case _ => )
   
   def objects = this.children
 
@@ -38,25 +35,5 @@ class IDEditor(project: Project) extends Pane:
 
   def initialize(): Unit =
     this.children.addAll(project.initializeNodes)
-
-
-val rec = new Rectangle:
-  x = 0
-  y = 0
-  width = 50
-  height = 50
-  fill = Blue
-
-val rec2 = new Rectangle:
-  x = 0
-  y = 0
-  width = 80
-  height = 32
-  fill = Green
-
-val testNode = ObjectNode("test", scala.collection.mutable.Buffer((rec, new Pos(0, 0, 0))))
-val testNode2 = ObjectNode("test2", scala.collection.mutable.Buffer((rec2, new Pos(0, 0, 0))))
-
-object tempEditor extends IDEditor(new Project("lol", (500.0, 500.0, 500.0)))
 
 
