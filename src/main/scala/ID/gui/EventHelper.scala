@@ -83,11 +83,12 @@ object EventHelper:
     )
     pane.addEventHandler(MouseEvent.MouseReleased, (event: MouseEvent) =>
       if condition then
-        val x = Rectangle(rect.getWidth, rect.getHeight) ;
-        val pos = Pos(rect.getTranslateX, rect.getTranslateY, 0.0) ;
-        val newNode = ObjectNode(x, pos) ;
+        if (5 < rect.getWidth) && (5 < rect.getHeight) then
+          val x = Rectangle(rect.getWidth, rect.getHeight) ;
+          val pos = Pos(rect.getTranslateX, rect.getTranslateY, 0.0) ;
+          val newNode = ObjectNode(x, pos) ;
+          pane.children += newNode ;
         pane.children.remove(rect) ;
-        pane.children += newNode
     )
 
   def circOnDrag(pane: IDEditor, condition: => Boolean = true ) =
@@ -114,11 +115,12 @@ object EventHelper:
     )
     pane.addEventHandler(MouseEvent.MouseReleased, (event: MouseEvent) =>
       if condition then
-        val ellipse = Ellipse(circ.getRadiusX, circ.getRadiusY) ;
-        val pos = Pos(2 * circ.getTranslateX - event.getX, 2 * circ.getTranslateY - event.getY, 0.0) ;
-        val newNode = ObjectNode(ellipse, pos) ;
+        if (5 < circ.getRadiusX) && (5 < circ.getRadiusY) then
+          val ellipse = Ellipse(circ.getRadiusX, circ.getRadiusY) ;
+          val pos = Pos(2 * circ.getTranslateX - event.getX, 2 * circ.getTranslateY - event.getY, 0.0) ;
+          val newNode = ObjectNode(ellipse, pos) ;
+          pane.children += newNode ;
         pane.children.remove(circ) ;
-        pane.children += newNode ;
     )
 
   /**
