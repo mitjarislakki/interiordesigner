@@ -1,0 +1,146 @@
+name: My appartment
+dimensions: 1000.0, 1000.0, -1.0
+idobjects:
+  - label: 
+    layer: 0
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 20.0
+        width: 360.0
+        rotation: 0.0
+        color: 0x000000ff
+        pos: 106.6, 67.2
+  - label: 
+    layer: 0
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 20.0
+        width: 360.0
+        rotation: 0.0
+        color: 0x000000ff
+        pos: 486.4, 67.2
+  - label: 
+    layer: 0
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 400.0
+        width: 20.0
+        rotation: 0.0
+        color: 0x000000ff
+        pos: 106.5, 47.2
+  - label: 
+    layer: 0
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 400.0
+        width: 20.0
+        rotation: 0.0
+        color: 0x000000ff
+        pos: 106.6, 427.6
+  - label: Desk
+    layer: 2
+    rotation: 0.0
+    height: 70.0
+    shapes:
+      - shape: rectangle
+        length: 200.0
+        width: 60.0
+        rotation: 0.0
+        color: 0x994d00ff
+        pos: 227.6, 67.9
+  - label: Bed
+    layer: 1
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 90.0
+        width: 200.0
+        rotation: 0.0
+        color: 0x669999ff
+        pos: 130.5, 70.1
+  - label: 
+    layer: 1
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: ellipse
+        length: 20.0
+        width: 20.0
+        rotation: 0.0
+        color: 0x808080ff
+        pos: 435.7, 84.3
+  - label: cabinet
+    layer: 1
+    rotation: 90.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 143.0
+        width: 40.0
+        rotation: 0.0
+        color: 0x333333ff
+        pos: 394.0, 224.0
+  - label: 
+    layer: 2
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 30.0
+        width: 25.0
+        rotation: 0.0
+        color: 0x996600ff
+        pos: 450.0, 178.0
+  - label: 
+    layer: 2
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 30.0
+        width: 25.0
+        rotation: 0.0
+        color: 0x996600ff
+        pos: 451.0, 284.0
+  - label: table
+    layer: 1
+    rotation: -90.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 145.0
+        width: 70.0
+        rotation: 0.0
+        color: 0x1a1a1aff
+        pos: 91.0, 314.0
+  - label: chair
+    layer: 1
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: ellipse
+        length: 30.0
+        width: 18.0
+        rotation: 0.0
+        color: 0xb3b3b3ff
+        pos: 300.0, 118.0
+  - label: cabinets
+    layer: 1
+    rotation: 0.0
+    height: 0.0
+    shapes:
+      - shape: rectangle
+        length: 184.0
+        width: 53.0
+        rotation: 0.0
+        color: 0xccccccff
+        pos: 300.0, 372.0

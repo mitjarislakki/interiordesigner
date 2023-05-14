@@ -1,7 +1,7 @@
 package ID.gui
 
 import javafx.geometry.VerticalDirection
-import scalafx.application.JFXApp3
+import scalafx.application.{JFXApp3, Platform}
 import scalafx.geometry.Insets
 import scalafx.scene.paint.Color.*
 import scalafx.scene.{Node, Scene}
@@ -56,7 +56,6 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
 
   // new project event
-
   IDMenu.newProject.onAction = (event) =>
     if offerSave() then
       val result = Dialogs.newProjectDialog()
@@ -76,6 +75,10 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
       case _ =>
     current.isEmpty || saveCondition.isDefined
 
+  // exit button
+  IDMenu.exitItem.onAction = event =>
+    if offerSave() then Platform.exit()
+  
   // file chooser for "open project" -button in menu
   def openFile() =
     if offerSave() then

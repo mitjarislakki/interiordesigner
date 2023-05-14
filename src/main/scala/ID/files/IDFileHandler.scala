@@ -56,7 +56,7 @@ object IDFileHandler:
                 objectbuffer += addition
                 addition.label = Some(value)
               else if key == "layer" then // set layer to furniture object
-                objectbuffer.lastOption.foreach(_.layer = Some(value.toInt))
+                objectbuffer.lastOption.foreach(_.layer = value.toIntOption)
               else if key == "rotation" && !inSubSection then
                 objectbuffer.lastOption.foreach(_.rotation = value.toDoubleOption)
               else if key == "height" then
@@ -75,7 +75,7 @@ object IDFileHandler:
       else if dimensions.isEmpty then (None, "Project dimensions undefined")
       else
         objectbuffer.find(!_.isValid) match
-          case Some(value) => (None, s"Import failed, something missing in object starting on ${value.startingLine}")
+          case Some(value) => (None, s"Import failed, something wrong in object starting on line ${value.startingLine}")
           case None => (Some(Project(projectName.get, dimensions.get, (objectbuffer.toSeq.map(_.getNodeParams.get)))), "Project loaded")
     catch
       case e: FileNotFoundException => (None, "File not found")
@@ -152,7 +152,7 @@ object IDFileHandler:
           objectbuffer += addition
           addition.label = Some(value)
         else if key == "layer" then // set layer to furniture object
-          objectbuffer.lastOption.foreach(_.layer = Some(value.toInt))
+          objectbuffer.lastOption.foreach(_.layer = value.toIntOption)
         else if key == "rotation" && !inSubSection then
           objectbuffer.lastOption.foreach(_.rotation = value.toDoubleOption)
         else if key == "height" then
@@ -167,6 +167,6 @@ object IDFileHandler:
     finally
       lineReader.close()
     objectbuffer.find(!_.isValid) match
-      case Some(value) => (None, s"Import failed, something missing in object starting on ${value.startingLine}")
+      case Some(value) => (None, s"Import failed, something wrong in object starting on line ${value.startingLine}")
       case None => (Some(objectbuffer.toSeq.map(_.getNodeParams.get)), "Import success")
 end IDFileHandler
