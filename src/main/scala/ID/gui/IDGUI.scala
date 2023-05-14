@@ -6,7 +6,7 @@ import scalafx.geometry.Insets
 import scalafx.scene.paint.Color.*
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent, ScrollEvent}
-import scalafx.scene.control.{Button, Label, Menu, MenuBar, MenuItem, SeparatorMenuItem, ToolBar}
+import scalafx.scene.control.{Button, ButtonType, Dialog, Label, Menu, MenuBar, MenuItem, SeparatorMenuItem, TextField, ToolBar}
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, ColumnConstraints, CornerRadii, GridPane, Pane, Priority, RowConstraints}
 import scalafx.scene.text.Font
 import ID.projects.Project
@@ -53,28 +53,54 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
   IDToolbar.vgrow = Priority.Always
 
 
+  // new project event
+
+  IDMenu.newProject.onAction = (event) =>
+    if offerSave() then
+      val t = Dialogs.newProjectDialog()
+      val result = t.getResult
+      result.foreach(project =>
+        val newEditor = IDEditor(project);
+        setEditor(newEditor)
+      )
+
+
+  private def offerSave(): Boolean =
+    val current = outerPane.currentChild
+    val saveCondition = current.flatMap(currentEditor => Dialogs.wishToSave().getResult)
+    saveCondition match
+      case Some(true) => saveToFile()
+      case _ =>
+    current.isEmpty || saveCondition.isDefined
+
   // file chooser for "open project" -button in menu
-  IDMenu.openProject.onAction = (event) =>
-     val t = new scalafx.stage.FileChooser()
-     t.setTitle("Choose a project file with .YAML format")
-     val file = t.showOpenDialog(this)
-     if file != null then
-       if (file.getName.endsWith(".YAML")) then
-         Some(IDReader.readProject(file)).foreach(pro =>
-           println("Println in IDGUI.scala (line 62)" + pro.furniture);
-           setEditor(IDEditor(pro));
+  def openFile() =
+    if offerSave() then
+      val t = new scalafx.stage.FileChooser()
+      t.setTitle("Choose a project file with .YAML format")
+      val file = t.showOpenDialog(this)
+      if file != null then
+         if (file.getName.endsWith(".YAML")) then
+           Some(IDReader.readProject(file)).foreach(pro =>
+             println("Println in IDGUI.scala (line 62)" + pro.furniture);
+             setEditor(IDEditor(pro));
+             updateTitle()
+           )
+         else
            updateTitle()
-         )
-       else
-         updateTitle()
+  IDMenu.openProject.onAction = e => openFile()
+
   // save project
-  IDMenu.saveProject.onAction = (event) =>
+  def saveToFile() =
     val t = new scalafx.stage.FileChooser()
     t.title = "Save Project"
     t.getExtensionFilters.addAll(new ExtensionFilter("Project File", "*.YAML*"))
+    t.initialFileName= "*.YAML"
     val file = t.showSaveDialog(this)
     if file != null then
       outerPane.currentChild.foreach(editor => IDReader.writeProjectToFile(file, editor))
+  IDMenu.saveProject.onAction = e => saveToFile()
+
 
   private var notification: Option[String] = None
   def updateTitle() =
@@ -92,6 +118,9 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
 
   def setListeners(editor: IDEditor) =
 
+    // Fetches current selectedNode in Option
+    def currentSelection: Option[ObjectNode] = Option(editor.selectedNode.value)
+
     // event handlers for ObjectNodes in editor
     def makeSelectable(node: javafx.scene.Node) =
       node match
@@ -99,7 +128,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
           // select node on click if SEL tool in use
           a.onMousePressed = (event: MouseEvent) => if IDToolbar.select.isSelected then editor.selectedNode.value = a
           // refresh IDOProperties on node drag if SEL tool in use
-          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then Option(editor.selectedNode.value).foreach(n => IDOProperties.update(n)))
+          a.addEventHandler(MouseEvent.MouseDragged, (event: MouseEvent) => if IDToolbar.select.isSelected then currentSelection.foreach(n => IDOProperties.update(n)))
         case _ =>
 
     // change listener for new nodes in children of editor
@@ -137,20 +166,19 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
     )
 
 
-
-    // listeners for IDOProperties input
+    /** listeners for IDOProperties input**/
     // name
     IDOProperties.nameBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node => node.setName(IDOProperties.nameBox.getText))
+      currentSelection.foreach(node => node.setName(IDOProperties.nameBox.getText))
     // X pos
     IDOProperties.xBox.onKeyTyped = (event: KeyEvent) =>
-        Option(editor.selectedNode.value).foreach(node => IDOProperties.xBox.getText.toDoubleOption.foreach(node.setTranslateX(_)))
+        currentSelection.foreach(node => IDOProperties.xBox.getText.toDoubleOption.foreach(node.setTranslateX(_)))
     // Y pos
     IDOProperties.yBox.onKeyTyped = (event: KeyEvent) =>
-        Option(editor.selectedNode.value).foreach(node => IDOProperties.yBox.getText.toDoubleOption.foreach(node.setTranslateY(_)))
+        currentSelection.foreach(node => IDOProperties.yBox.getText.toDoubleOption.foreach(node.setTranslateY(_)))
     // length
     IDOProperties.lBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node =>
+      currentSelection.foreach(node =>
         IDOProperties.lBox.getText.toDoubleOption match
           case Some(n) if n>0 =>
             node.lengthTo(n)
@@ -158,7 +186,7 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
         )
     // width
     IDOProperties.wBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node =>
+      currentSelection.foreach(node =>
         IDOProperties.wBox.getText.toDoubleOption match
           case Some(n) if n>0 =>
             node.widthTo(n)
@@ -166,23 +194,23 @@ object IDGUI extends scalafx.application.JFXApp3.PrimaryStage:
         )
     // height
     IDOProperties.hBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node =>
+      currentSelection.foreach(node =>
         IDOProperties.hBox.getText.toDoubleOption match
           case Some(n) if n>0 => node.setVHeight(n)
           case _ =>
       )
     //rotation
     IDOProperties.rBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node =>
+      currentSelection.foreach(node =>
         IDOProperties.rBox.getText.toDoubleOption.foreach(n => node.rotate = n)
       )
     // layer
     IDOProperties.layerBox.onKeyTyped = (event: KeyEvent) =>
-      Option(editor.selectedNode.value).foreach(node =>
+      currentSelection.foreach(node =>
         IDOProperties.layerBox.getText.toIntOption match
           case Some(n) if n>=0 => node.setLayer(n)
           case _ =>
         )
     // color
     IDOProperties.colorPicker.onAction = (event: ActionEvent) =>
-      Option(editor.selectedNode.value).foreach(node => node.setColor(IDOProperties.colorPicker.getValue))
+      currentSelection.foreach(node => node.setColor(IDOProperties.colorPicker.getValue))

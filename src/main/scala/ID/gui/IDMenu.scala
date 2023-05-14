@@ -8,6 +8,7 @@ object IDMenu:
 
    val fileMenu = new Menu("File")
      val newProject = new MenuItem("New project")
+     val editProject = new MenuItem("Edit project")
      val openProject = new MenuItem("Open project")
      val saveProject = new MenuItem("Save project")
      val exitItem = new MenuItem("Exit")
